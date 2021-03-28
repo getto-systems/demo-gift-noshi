@@ -1,3 +1,3 @@
-# ui
+# gift-noshi
 
-user interface for project-example
+demonstration of gift-noshi

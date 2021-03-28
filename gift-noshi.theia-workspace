@@ -1,0 +1,29 @@
+{
+    "folders": [
+        {
+            "path": "file:///apps/getto/gift/noshi/ui/lib"
+        },
+        {
+            "path": "file:///apps/getto/gift/noshi/ui/public"
+        },
+        {
+            "path": "file:///apps/getto/gift/noshi/ui/secure"
+        },
+        {
+            "path": "file:///apps/getto/gift/noshi/ui/css"
+        },
+        {
+            "path": "file:///apps/getto/gift/noshi/ui/env"
+        },
+        {
+            "path": "file:///apps/getto/gift/noshi/ui/setup"
+        },
+        {
+            "path": "file:///apps/getto/gift/noshi/ui/config"
+        }
+    ],
+    "settings": {
+        "editor.autoSave": "on",
+        "typescript.tsdk": "/apps/getto/gift/noshi/ui/node_modules/typescript/lib"
+    }
+}

@@ -1,3 +1,0 @@
-[submodule "lib/z_external/api/z_protobuf"]
-	path = lib/z_external/api/z_protobuf
-	url = https://github.com/getto-systems/project-example-api-protobuf.git

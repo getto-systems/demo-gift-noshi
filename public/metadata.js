@@ -5,19 +5,13 @@ const headers = {
     "object-src 'none'",
     "base-uri 'none'",
     "form-action 'self'",
-    "connect-src " + [
-      "'self'",
-      "https://auth.example.getto.systems/",
-    ].join(" "),
+    "connect-src 'self'",
     "frame-src 'none'",
     "frame-ancestors 'none'",
     "img-src 'self'",
     "font-src 'self'",
     "manifest-src 'self'",
-    "script-src " + [
-      "'self'",
-      "https://secure.example.getto.systems/",
-    ].join(" "),
+    "script-src 'self'",
     "style-src " + [
       "'self'",
       "https://trellis.getto.systems/css/",
