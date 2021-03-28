@@ -11,19 +11,17 @@ import {
 } from "../infra"
 
 import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/data"
-import { GrantedRoles } from "../../../auth/auth_ticket/kernel/data"
 import { Menu, MenuCategoryPath, MenuNode, MenuTargetPath } from "../data"
 
 export type BuildMenuParams = Readonly<{
     version: string
     menuTree: MenuTree
     menuTargetPath: ConvertLocationResult<MenuTargetPath>
-    permittedRoles: GrantedRoles
     menuExpand: MenuExpand
     menuBadge: MenuBadge
 }>
 export function buildMenu(params: BuildMenuParams): Menu {
-    const { version, menuTree, menuTargetPath, permittedRoles, menuExpand, menuBadge } = params
+    const { version, menuTree, menuTargetPath, menuExpand, menuBadge } = params
 
     return toMenu(menuTree, [])
 
@@ -81,6 +79,7 @@ export function buildMenu(params: BuildMenuParams): Menu {
         function isAllow(permission: MenuPermission): boolean {
             switch (permission.type) {
                 case "allow":
+                case "role":
                     return true
 
                 case "any":
@@ -88,9 +87,6 @@ export function buildMenu(params: BuildMenuParams): Menu {
 
                 case "all":
                     return permission.permits.every(isAllow)
-
-                case "role":
-                    return permittedRoles.includes(permission.role)
             }
         }
         function hasActive(node: MenuNode): boolean {

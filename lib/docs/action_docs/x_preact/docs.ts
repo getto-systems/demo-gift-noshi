@@ -1,7 +1,7 @@
 import { h, VNode } from "preact"
+import { useErrorBoundary } from "preact/hooks"
 
 import { useApplicationView } from "../../../z_vendor/getto-application/action/x_preact/hooks"
-import { useNotifyUnexpectedError } from "../../../avail/action_notify_unexpected_error/x_preact/hooks"
 import { useDocumentTitle } from "../../../x_preact/common/hooks"
 
 import {
@@ -34,7 +34,10 @@ type EntryProps = Readonly<{
 export function DocsEntry(props: EntryProps): VNode {
     const resource = useApplicationView(props.view)
 
-    const err = useNotifyUnexpectedError(resource)
+    const [err] = useErrorBoundary((err) => {
+        // 認証しないのでエラーはどうしようもない
+        console.log(err)
+    })
     if (err) {
         return h(ApplicationErrorComponent, { err: `${err}` })
     }

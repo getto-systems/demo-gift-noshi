@@ -5,16 +5,12 @@ const path = require("path")
 module.exports = {
     findPublicEntries,
     findHtmlFiles,
-    findSecureEntries,
 }
 
 function findPublicEntries() {
-    return [
-        "avail/move-to-latest-version",
-        "avail/move-to-next-version",
-        "avail/not-found",
-        "auth/sign",
-    ].reduce(toEntry("public"), {})
+    return ["avail/move-to-latest-version", "avail/move-to-next-version", "avail/not-found"]
+        .concat(findHtmlFiles().map((file) => file.replace("/", "").replace(/\.html$/, "")))
+        .reduce(toEntry("public"), {})
 }
 
 function findHtmlFiles() {
@@ -53,11 +49,6 @@ function findHtmlFiles() {
             }
         }
     }
-}
-function findSecureEntries() {
-    return findHtmlFiles()
-        .map((file) => file.replace("/", "").replace(/\.html$/, ""))
-        .reduce(toEntry("secure"), {})
 }
 
 function toEntry(root) {

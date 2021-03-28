@@ -6,11 +6,9 @@
   "scripts": {
     "storybook": "cd storybook && npm run build",
     "start:public": "webpack serve --mode development --config public/webpack.config.js",
-    "start:secure": "webpack serve --mode development --config secure/webpack.config.js",
     "build": "npm run setup && npm run webpack",
-    "webpack": "npm run webpack:public && npm run webpack:secure",
+    "webpack": "npm run webpack:public",
     "webpack:public": "webpack --mode production --config public/webpack.config.js",
-    "webpack:secure": "webpack --mode production --config secure/webpack.config.js",
     "setup": "npm run setup:protobuf && npm run setup:theme && npm run setup:css && npm run setup:environment",
     "setup:protobuf": "sh setup/protobuf.sh",
     "setup:theme": "sh setup/theme.sh",

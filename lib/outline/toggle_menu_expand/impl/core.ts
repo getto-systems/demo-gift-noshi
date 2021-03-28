@@ -1,5 +1,4 @@
 import { menuExpandRepositoryConverter } from "../../kernel/impl/converter"
-import { authzRepositoryConverter } from "../../../auth/auth_ticket/kernel/converter"
 
 import { buildMenu } from "../../kernel/impl/menu"
 
@@ -23,19 +22,7 @@ interface ModifyExpand {
 }
 function modifyMenuExpand(modify: ModifyExpand): Toggle {
     return (infra, store) => (detecter) => (path, post) => {
-        const authz = infra.authz(authzRepositoryConverter)
         const menuExpand = infra.menuExpand(menuExpandRepositoryConverter)
-
-        const authzResult = authz.get()
-        if (!authzResult.success) {
-            post({ type: "repository-error", err: authzResult.err })
-            return
-        }
-        if (!authzResult.found) {
-            authz.remove()
-            post({ type: "required-to-login" })
-            return
-        }
 
         const fetchMenuExpandResult = store.menuExpand.get()
         const expand = fetchMenuExpandResult.found ? fetchMenuExpandResult.value : initMenuExpand()
@@ -59,7 +46,6 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
                 version: infra.version,
                 menuTree: infra.menuTree,
                 menuTargetPath: detecter(),
-                permittedRoles: authzResult.value.roles,
                 menuExpand: expand,
                 menuBadge: badge,
             }),

@@ -1,4 +1,3 @@
-import { authzRepositoryConverter } from "../../../auth/auth_ticket/kernel/converter"
 import { menuExpandRepositoryConverter } from "../../kernel/impl/converter"
 
 import { buildMenu } from "../../kernel/impl/menu"
@@ -14,19 +13,7 @@ interface Load {
     (infra: LoadMenuInfra, store: LoadMenuStore): LoadMenuPod
 }
 export const loadMenu: Load = (infra, store) => (detecter) => async (post) => {
-    const authz = infra.authz(authzRepositoryConverter)
     const menuExpand = infra.menuExpand(menuExpandRepositoryConverter)
-
-    const authzResult = authz.get()
-    if (!authzResult.success) {
-        post({ type: "repository-error", err: authzResult.err })
-        return
-    }
-    if (!authzResult.found) {
-        authz.remove()
-        post({ type: "required-to-login" })
-        return
-    }
 
     const menuExpandResult = menuExpand.get()
     if (!menuExpandResult.success) {
@@ -45,7 +32,6 @@ export const loadMenu: Load = (infra, store) => (detecter) => async (post) => {
             version: infra.version,
             menuTree: infra.menuTree,
             menuTargetPath: detecter(),
-            permittedRoles: authzResult.value.roles,
             menuExpand: expand,
             menuBadge: EMPTY_BADGE, // ロードに時間がかかる可能性があるのであとでロードする
         }),

@@ -6,6 +6,6 @@ server {
   ssl_certificate_key ${TLS_KEY};
 
   location / {
-    proxy_pass http://${LABO_IP}:${GETTO_EXAMPLE_UI_PUBLIC_PORT};
+    proxy_pass http://${LABO_IP}:${DEMO_GIFT_NOSHI_PUBLIC_PORT};
   }
 }

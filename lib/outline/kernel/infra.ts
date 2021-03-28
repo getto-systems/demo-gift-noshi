@@ -5,7 +5,6 @@ import { GetMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
 export type MenuContent = Readonly<{
     key: string
-    loadMenuBadge: boolean
     menuTree: MenuTree
 }>
 
