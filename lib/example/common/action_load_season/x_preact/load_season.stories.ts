@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../z_vendor/storybook/preact/story"
 
-import { copyright, siteInfo } from "../../../../x_preact/common/site"
+import { copyright, siteInfo } from "../../../site"
 import {
     appLayout,
     appMain,

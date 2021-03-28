@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 
 import { label_alert } from "../../../../z_vendor/getto-css/preact/design/highlight"
 
-import { VNodeContent } from "../../../../x_preact/common/design/common"
+import { VNodeContent } from "../../../../x_preact/design/common"
 
 import { LoadSeasonResource } from "../resource"
 

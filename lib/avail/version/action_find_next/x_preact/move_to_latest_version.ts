@@ -8,8 +8,8 @@ import {
 } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
-import { siteInfo } from "../../../../x_preact/common/site"
-import { spinner } from "../../../../x_preact/common/design/icon"
+import { siteInfo } from "../../../../example/site"
+import { spinner } from "../../../../x_preact/design/icon"
 
 import { ApplicationErrorComponent } from "../../../common/x_preact/application_error"
 
