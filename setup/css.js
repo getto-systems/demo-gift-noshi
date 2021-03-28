@@ -10,11 +10,12 @@ const CleanCss = require("clean-css")
 compile({
     source: path.join(__dirname, "../css/site.css"),
     output: path.join(__dirname, "../public/dist/css/site.css"),
+    plugins: [autoprefixer()],
 })
 
-function compile({ source, output }) {
+function compile({ source, output, plugins }) {
     fs.readFile(source, (_err, css) => {
-        postcss([autoprefixer])
+        postcss(plugins)
             .process(css, { from: source, to: output })
             .then((postcssResult) => {
                 process.chdir(path.dirname(source))

@@ -1,4 +1,3 @@
-import { authzRepositoryConverter } from "../../../auth/auth_ticket/kernel/converter"
 import { menuBadgeRemoteConverter } from "../../kernel/impl/converter"
 
 import { buildMenu, BuildMenuParams } from "../../kernel/impl/menu"
@@ -15,25 +14,12 @@ interface Update {
 }
 export const updateMenuBadge: Update = (infra, store) => (detecter) => async (post) => {
     const getMenuBadge = infra.getMenuBadge(menuBadgeRemoteConverter)
-    const authz = infra.authz(authzRepositoryConverter)
-
-    const authzResult = authz.get()
-    if (!authzResult.success) {
-        post({ type: "repository-error", err: authzResult.err })
-        return
-    }
-    if (!authzResult.found) {
-        authz.remove()
-        post({ type: "required-to-login" })
-        return
-    }
 
     const fetchResult = store.menuExpand.get()
     const expand = fetchResult.found ? fetchResult.value : initMenuExpand()
 
     const buildParams: BuildMenuParams = {
         version: infra.version,
-        permittedRoles: authzResult.value.roles,
         menuExpand: expand,
         menuTargetPath: detecter(),
         menuTree: infra.menuTree,

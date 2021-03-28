@@ -1,12 +1,5 @@
 import { RemoteCommonError, RemoteInfraError } from "./data"
-import { Remote, RemoteFeature, RemotePod, RemoteResult } from "./infra"
-
-export function remoteFeature(serverURL: string, webCrypto: Crypto): RemoteFeature {
-    return {
-        serverURL,
-        nonce: () => webCrypto.getRandomValues(new Uint32Array(4)).join("-"),
-    }
-}
+import { Remote, RemotePod, RemoteResult } from "./infra"
 
 export function wrapRemote<M, V, R, E_raw, E_unknown>(
     remote: Remote<M, R, E_raw>,

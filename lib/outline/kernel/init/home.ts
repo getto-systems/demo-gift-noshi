@@ -6,13 +6,11 @@ import { category, item } from "./common"
 export function homeMenuContent(): MenuContent {
     return {
         key: env.storageKey.menuExpand.home,
-        loadMenuBadge: true,
         menuTree: [
             category("MAIN", allow, [
                 item("ホーム", lnir("home"), "/index.html"),
                 item("ドキュメント", lnir("files-alt"), "/docs/index.html"),
             ]),
-            category("SYSTEM", allow, [item("プロフィール", lnir("user"), "/auth/profile.html")]),
         ],
     }
 }

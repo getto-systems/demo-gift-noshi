@@ -18,7 +18,6 @@ import { loadMenuEventHasDone } from "../load_menu/impl/core"
 import { updateMenuBadgeEventHasDone } from "../update_menu_badge/impl/core"
 import { toggleMenuExpandEventHasDone } from "../toggle_menu_expand/impl/core"
 
-import { AuthzRepositoryPod } from "../../auth/auth_ticket/kernel/infra"
 import { GetMenuBadgeRemotePod, MenuExpandRepositoryPod } from "../kernel/infra"
 
 import { LoadMenuResource } from "./resource"
@@ -69,24 +68,6 @@ describe("Menu", () => {
                                 ],
                             },
                         ])
-                    },
-                },
-            ])
-
-            resource.menu.subscriber.subscribe(runner(done))
-        }))
-
-    test("load menu; empty roles", () =>
-        new Promise<void>((done) => {
-            const { resource } = empty()
-
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.menu.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([{ type: "required-to-login" }])
                     },
                 },
             ])
@@ -258,71 +239,6 @@ describe("Menu", () => {
             resource.menu.subscriber.subscribe(runner(done))
         }))
 
-    test("load menu; dev docs", () =>
-        new Promise<void>((done) => {
-            const { resource } = devDocs()
-
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.menu.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                type: "succeed-to-load",
-                                menu: [
-                                    $category("MAIN", ["MAIN"], 0, [
-                                        $item("ホーム", "home", "/1.0.0/index.html", 0),
-                                        item("ドキュメント", "docs", "/1.0.0/docs/index.html", 0),
-                                    ]),
-                                    category("DOCUMENT", ["DOCUMENT"], 0, [
-                                        item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
-                                        category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
-                                            item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
-                                        ]),
-                                    ]),
-                                    category("DEVELOPMENT", ["DEVELOPMENT"], 0, [
-                                        item(
-                                            "配備構成",
-                                            "deployment",
-                                            "/1.0.0/docs/z-dev/deployment.html",
-                                            0,
-                                        ),
-                                    ]),
-                                ],
-                            },
-                            {
-                                type: "succeed-to-update",
-                                menu: [
-                                    $category("MAIN", ["MAIN"], 30, [
-                                        $item("ホーム", "home", "/1.0.0/index.html", 10),
-                                        item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
-                                    ]),
-                                    category("DOCUMENT", ["DOCUMENT"], 0, [
-                                        item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
-                                        category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
-                                            item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
-                                        ]),
-                                    ]),
-                                    category("DEVELOPMENT", ["DEVELOPMENT"], 0, [
-                                        item(
-                                            "配備構成",
-                                            "deployment",
-                                            "/1.0.0/docs/z-dev/deployment.html",
-                                            0,
-                                        ),
-                                    ]),
-                                ],
-                            },
-                        ])
-                    },
-                },
-            ])
-
-            resource.menu.subscriber.subscribe(runner(done))
-        }))
-
     test("terminate", () =>
         new Promise<void>((done) => {
             const { resource } = standard()
@@ -407,28 +323,17 @@ describe("Menu", () => {
 })
 
 function standard() {
-    const [resource, menuExpand] = initResource(standard_authz(), empty_menuExpand())
+    const [resource, menuExpand] = initResource(empty_menuExpand())
 
     return { resource, repository: { menuExpand } }
 }
-function empty() {
-    const [resource] = initResource(empty_authz(), empty_menuExpand())
-
-    return { resource }
-}
-function devDocs() {
-    const [resource] = initResource(devDocs_authz(), empty_menuExpand())
-
-    return { resource }
-}
 function expand() {
-    const [resource] = initResource(standard_authz(), expand_menuExpand())
+    const [resource] = initResource(expand_menuExpand())
 
     return { resource }
 }
 
 function initResource(
-    authz: AuthzRepositoryPod,
     menuExpand: MenuExpandRepositoryPod,
 ): [LoadMenuResource, MenuExpandRepositoryPod] {
     const version = standard_version()
@@ -442,7 +347,6 @@ function initResource(
                     {
                         version,
                         menuTree: standard_MenuTree(),
-                        authz,
                         menuExpand,
                         getMenuBadge,
                     },
@@ -462,20 +366,6 @@ function standard_detecter(): LoadMenuLocationDetecter {
 }
 function standard_version(): string {
     return "1.0.0"
-}
-
-function standard_authz(): AuthzRepositoryPod {
-    const authz = mockDB()
-    authz.set({ nonce: "api-nonce", roles: ["admin"] })
-    return wrapRepository(authz)
-}
-function empty_authz(): AuthzRepositoryPod {
-    return wrapRepository(mockDB())
-}
-function devDocs_authz(): AuthzRepositoryPod {
-    const authz = mockDB()
-    authz.set({ nonce: "api-nonce", roles: ["admin", "dev-docs"] })
-    return wrapRepository(authz)
 }
 
 function empty_menuExpand(): MenuExpandRepositoryPod {

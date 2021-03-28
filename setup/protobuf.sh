@@ -2,7 +2,6 @@
 
 protobuf_main(){
     protobuf_generate_all "lib/z_external/db"
-    protobuf_generate_all "lib/z_external/api"
 }
 
 protobuf_generate_all(){

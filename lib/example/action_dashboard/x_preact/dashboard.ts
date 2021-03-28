@@ -1,4 +1,5 @@
 import { h, VNode } from "preact"
+import { useErrorBoundary } from "preact/hooks"
 
 import {
     appLayout,
@@ -9,7 +10,6 @@ import {
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
 import { useApplicationView } from "../../../z_vendor/getto-application/action/x_preact/hooks"
-import { useNotifyUnexpectedError } from "../../../avail/action_notify_unexpected_error/x_preact/hooks"
 import { useDocumentTitle } from "../../../x_preact/common/hooks"
 
 import { copyright, siteInfo } from "../../../x_preact/common/site"
@@ -25,7 +25,10 @@ import { DashboardView, DashboardResource } from "../resource"
 export function DashboardEntry(view: DashboardView): VNode {
     const resource = useApplicationView(view)
 
-    const err = useNotifyUnexpectedError(resource)
+    const [err] = useErrorBoundary((err) => {
+        // 認証していないのでエラーはどうしようもない
+        console.log(err)
+    })
     if (err) {
         return h(ApplicationErrorComponent, { err: `${err}` })
     }

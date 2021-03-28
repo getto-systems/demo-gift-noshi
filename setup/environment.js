@@ -23,16 +23,11 @@ function envContent() {
         version,
         isProduction,
 
-        secureServerURL: process.env.SECURE_SERVER_URL,
-        apiServerURL: process.env.API_SERVER_URL,
-
         storageKey: {
-            authn: "GETTO-EXAMPLE-AUTHN",
-            authz: "GETTO-EXAMPLE-AUTHZ",
-            season: "GETTO-EXAMPLE-SEASON",
+            season: "GIFT-NOSHI-SEASON",
             menuExpand: {
-                home: "GETTO-EXAMPLE-MENU-EXPAND-HOME",
-                docs: "GETTO-EXAMPLE-MENU-EXPAND-DOCS",
+                home: "GIFT-NOSHI-MENU-EXPAND-HOME",
+                docs: "GIFT-NOSHI-MENU-EXPAND-DOCS",
             },
         },
     }
