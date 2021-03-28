@@ -49,12 +49,12 @@ type MockProps = Readonly<{
 }>
 const template = storyTemplate<MockProps>((props) => {
     return appLayout({
-        siteInfo: siteInfo(),
+        siteInfo,
         header: [],
         main: appMain({
             header: mainHeader([mainTitle("タイトル")]),
             body: mainBody("コンテンツ"),
-            copyright: copyright(),
+            copyright,
         }),
         menu: h(LoadMenuComponent, {
             menu: mockLoadMenuCoreAction(menu()),

@@ -188,7 +188,7 @@ export function menuItem({ isActive, href, content, badge }: MenuItemContent): V
     </li>`
 }
 
-export function menuFooter(poweredBy: string[]): VNode {
+export function menuFooter(poweredBy: readonly string[]): VNode {
     return html`<footer class="menu__footer">
         <p class="menu__footer__message">
             powered by :<br />

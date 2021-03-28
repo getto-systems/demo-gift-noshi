@@ -43,7 +43,7 @@ function toContent(breadcrumbList: BreadcrumbList): VNode[] {
 function top(): VNode {
     // トップリンク href="#menu" は menu の id="menu" と対応
     // mobile レイアウトで menu の位置に移動
-    return mainBreadcrumbLink(`#${MENU_ID}`, html`${icon("menu-alt-3")} ${siteInfo().title}`)
+    return mainBreadcrumbLink(`#${MENU_ID}`, html`${icon("menu-alt-3")} ${siteInfo.title}`)
 }
 function category({ label }: MenuCategory): VNode {
     return linky(label)
