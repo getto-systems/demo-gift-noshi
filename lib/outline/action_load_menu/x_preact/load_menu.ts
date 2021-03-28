@@ -52,7 +52,7 @@ export function LoadMenuComponent(props: Props): VNode {
     }
 
     function menu(content: VNode[]) {
-        return appMenu([...content, menuFooter(poweredBy())])
+        return appMenu([...content, menuFooter(poweredBy)])
     }
 
     function content(wholeMenu: Menu): VNode {

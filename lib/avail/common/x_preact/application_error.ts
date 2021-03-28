@@ -11,7 +11,7 @@ type Props = Readonly<{
     err: string
 }>
 export function ApplicationErrorComponent(props: Props): VNode {
-    return loginBox(siteInfo(), {
+    return loginBox(siteInfo, {
         title: html`システムエラーが発生しました`,
         body: [
             html`<p>

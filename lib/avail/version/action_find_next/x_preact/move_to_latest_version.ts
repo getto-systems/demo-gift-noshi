@@ -66,7 +66,7 @@ export function MoveToLatestVersionComponent(props: Props): VNode {
     }
 
     function takeLongtimeMessage() {
-        return loginBox(siteInfo(), {
+        return loginBox(siteInfo, {
             title: "アプリケーション読み込み中",
             body: [
                 html`<p>${spinner} アプリケーションの読み込みに時間がかかっています</p>`,

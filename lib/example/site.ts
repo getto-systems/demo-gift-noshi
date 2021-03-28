@@ -4,18 +4,11 @@ export type SiteInfo = Readonly<{
     subTitle: string
 }>
 
-export function siteInfo(): SiteInfo {
-    return {
-        brand: "GETTO",
-        title: "Example",
-        subTitle: "code templates",
-    }
+export const siteInfo: SiteInfo = {
+    brand: "GETTO",
+    title: "Example",
+    subTitle: "code templates",
 }
 
-export function copyright(): string {
-    return "GETTO.systems"
-}
-
-export function poweredBy(): string[] {
-    return ["LineIcons", "みんなの文字"]
-}
+export const copyright = "GETTO.systems" as const
+export const poweredBy = ["LineIcons", "みんなの文字"] as const

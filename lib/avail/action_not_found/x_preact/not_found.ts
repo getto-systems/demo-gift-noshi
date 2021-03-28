@@ -33,7 +33,7 @@ type Props = NotFoundResource
 export function NotFoundComponent(props: Props): VNode {
     useDocumentTitle("Not Found")
 
-    return loginBox(siteInfo(), {
+    return loginBox(siteInfo, {
         title: "リンクが切れていました",
         body: [
             html`<p>

@@ -39,12 +39,12 @@ export function DashboardComponent(resource: DashboardResource): VNode {
     useDocumentTitle("ホーム")
 
     return appLayout({
-        siteInfo: siteInfo(),
+        siteInfo,
         header: [h(LoadSeasonComponent, resource)],
         main: appMain({
             header: mainHeader([mainTitle("ホーム"), h(LoadBreadcrumbListComponent, resource)]),
             body: mainBody(h(ExampleComponent, resource)),
-            copyright: copyright(),
+            copyright,
         }),
         menu: h(LoadMenuEntry, resource),
     })
