@@ -1,13 +1,13 @@
 {
     "folders": [
         {
+            "path": "file:///apps/demo/gift/noshi/css"
+        },
+        {
             "path": "file:///apps/demo/gift/noshi/lib"
         },
         {
             "path": "file:///apps/demo/gift/noshi/public"
-        },
-        {
-            "path": "file:///apps/demo/gift/noshi/css"
         },
         {
             "path": "file:///apps/demo/gift/noshi/env"
