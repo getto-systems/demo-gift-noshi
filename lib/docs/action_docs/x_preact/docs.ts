@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 
 import { useApplicationView } from "../../../z_vendor/getto-application/action/x_preact/hooks"
-import { useDocumentTitle } from "../../../x_preact/common/hooks"
+import { useDocumentTitle } from "../../../x_preact/hooks"
 
 import {
     appLayout,
@@ -12,7 +12,7 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { copyright, siteInfo } from "../../../x_preact/common/site"
+import { copyright, siteInfo } from "../../../example/site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
 import { LoadMenuEntry } from "../../../outline/action_load_menu/x_preact/load_menu"

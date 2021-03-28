@@ -1,4 +1,4 @@
-import { PagerOptionsContent, SortSign } from "../../../z_vendor/getto-css/preact/design/data"
+import { PagerOptionsContent, SortSign } from "../../z_vendor/getto-css/preact/design/data"
 
 import { VNodeContent } from "./common"
 import { icon } from "./icon"

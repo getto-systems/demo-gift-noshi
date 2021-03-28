@@ -7,9 +7,9 @@ import { useApplicationView } from "../../../z_vendor/getto-application/action/x
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useDocumentTitle } from "../../../x_preact/common/hooks"
-import { siteInfo } from "../../../x_preact/common/site"
-import { icon } from "../../../x_preact/common/design/icon"
+import { useDocumentTitle } from "../../../x_preact/hooks"
+import { siteInfo } from "../../../example/site"
+import { icon } from "../../../x_preact/design/icon"
 
 import { ApplicationErrorComponent } from "../../common/x_preact/application_error"
 

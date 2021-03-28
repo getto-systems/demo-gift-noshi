@@ -10,9 +10,9 @@ import {
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
 import { useApplicationView } from "../../../z_vendor/getto-application/action/x_preact/hooks"
-import { useDocumentTitle } from "../../../x_preact/common/hooks"
+import { useDocumentTitle } from "../../../x_preact/hooks"
 
-import { copyright, siteInfo } from "../../../x_preact/common/site"
+import { copyright, siteInfo } from "../../site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
 import { LoadSeasonComponent } from "../../common/action_load_season/x_preact/load_season"

@@ -8,8 +8,8 @@ import {
 } from "../../../z_vendor/getto-css/preact/layout/app"
 import { linky } from "../../../z_vendor/getto-css/preact/design/highlight"
 
-import { siteInfo } from "../../../x_preact/common/site"
-import { icon } from "../../../x_preact/common/design/icon"
+import { siteInfo } from "../../../example/site"
+import { icon } from "../../../x_preact/design/icon"
 
 import { MENU_ID } from "../../action_load_menu/x_preact/load_menu"
 

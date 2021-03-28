@@ -5,7 +5,7 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 import { buttons, field } from "../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 
-import { siteInfo } from "../../../x_preact/common/site"
+import { siteInfo } from "../../../example/site"
 
 type Props = Readonly<{
     err: string

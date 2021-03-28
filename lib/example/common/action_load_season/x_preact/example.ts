@@ -6,7 +6,7 @@ import { field } from "../../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { VNodeContent } from "../../../../x_preact/common/design/common"
+import { VNodeContent } from "../../../../x_preact/design/common"
 
 import { LoadSeasonResource } from "../resource"
 
