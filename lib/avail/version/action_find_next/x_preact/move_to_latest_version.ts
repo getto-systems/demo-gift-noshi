@@ -8,7 +8,7 @@ import {
 } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
-import { siteInfo } from "../../../../example/site"
+import { siteInfo } from "../../../../noshi/site"
 import { spinner } from "../../../../x_preact/design/icon"
 
 import { ApplicationErrorComponent } from "../../../common/x_preact/application_error"

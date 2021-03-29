@@ -13,7 +13,7 @@ import {
 } from "../../../z_vendor/getto-css/preact/layout/app"
 import { badge_alert, notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 
-import { poweredBy } from "../../../example/site"
+import { poweredBy } from "../../../noshi/site"
 
 import { LoadMenuResource, LoadMenuResourceState } from "../resource"
 

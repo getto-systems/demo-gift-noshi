@@ -8,7 +8,7 @@ import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
 import { useDocumentTitle } from "../../../x_preact/hooks"
-import { siteInfo } from "../../../example/site"
+import { siteInfo } from "../../../noshi/site"
 import { icon } from "../../../x_preact/design/icon"
 
 import { ApplicationErrorComponent } from "../../common/x_preact/application_error"

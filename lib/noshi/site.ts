@@ -6,8 +6,8 @@ export type SiteInfo = Readonly<{
 
 export const siteInfo: SiteInfo = {
     brand: "GETTO",
-    title: "Example",
-    subTitle: "code templates",
+    title: "のし印刷",
+    subTitle: "プレビュー",
 }
 
 export const copyright = "GETTO.systems" as const
