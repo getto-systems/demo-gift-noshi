@@ -12,7 +12,7 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { copyright, siteInfo } from "../../../example/site"
+import { copyright, siteInfo } from "../../../noshi/site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
 import { LoadMenuEntry } from "../../../outline/action_load_menu/x_preact/load_menu"
