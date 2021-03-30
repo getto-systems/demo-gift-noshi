@@ -25,6 +25,10 @@ enum LoadEnum {
     "success",
     "error",
 }
+enum PeriodEnum {
+    "summer",
+    "winter",
+}
 
 export default {
     title: "library/Example/Common/Load Season",
@@ -35,12 +39,16 @@ export default {
         load: {
             control: { type: "select", options: enumKeys(LoadEnum) },
         },
+        period: {
+            control: { type: "select", options: enumKeys(PeriodEnum) },
+        },
     },
 }
 
 type MockProps = Readonly<{
     load: keyof typeof LoadEnum
     year: number
+    period: keyof typeof PeriodEnum
     err: string
 }>
 const template = storyTemplate<MockProps>((props) => {
@@ -58,7 +66,10 @@ const template = storyTemplate<MockProps>((props) => {
     function season(): LoadSeasonResult {
         switch (props.load) {
             case "success":
-                return { success: true, value: markSeason({ year: props.year }) }
+                return {
+                    success: true,
+                    value: markSeason({ year: props.year, period: props.period }),
+                }
 
             case "error":
                 return { success: false, err: { type: "infra-error", err: props.err } }
@@ -66,4 +77,9 @@ const template = storyTemplate<MockProps>((props) => {
     }
 })
 
-export const LoadSeason = template({ load: "success", year: new Date().getFullYear(), err: "" })
+export const LoadSeason = template({
+    load: "success",
+    year: new Date().getFullYear(),
+    period: "summer",
+    err: "",
+})

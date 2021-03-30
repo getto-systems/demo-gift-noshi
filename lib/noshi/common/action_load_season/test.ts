@@ -29,7 +29,7 @@ describe("LoadSeason", () => {
         const season = standard_season()
 
         // TODO カバレッジのために直接呼び出している。シーズンの設定用 action を作るべき
-        season(seasonRepositoryConverter).set(markSeason({ year: 2021 }))
+        season(seasonRepositoryConverter).set(markSeason({ year: 2021, period: "summer" }))
         expect(true).toBe(true)
     })
 })

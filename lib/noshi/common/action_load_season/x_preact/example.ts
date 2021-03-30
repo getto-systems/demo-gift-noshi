@@ -32,7 +32,17 @@ function seasonBox(body: VNodeContent): VNode {
 }
 
 function seasonInfo(season: Season): VNodeContent {
-    return season.year
+    return `${season.year}年 ${period()}`
+
+    function period(): VNodeContent {
+        switch (season.period) {
+            case "summer":
+                return "夏"
+
+            case "winter":
+                return "冬"
+        }
+    }
 }
 
 function loadError(err: RepositoryError): VNodeContent {

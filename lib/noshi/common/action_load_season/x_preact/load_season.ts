@@ -23,7 +23,17 @@ function info(body: VNodeContent) {
 }
 
 function seasonContent(season: Season) {
-    return season.year
+    return `${season.year}年 ${period()}`
+
+    function period(): VNodeContent {
+        switch (season.period) {
+            case "summer":
+                return "夏"
+
+            case "winter":
+                return "冬"
+        }
+    }
 }
 function errorContent(err: RepositoryError) {
     return [label_alert("ロードエラー"), ...detail()]
