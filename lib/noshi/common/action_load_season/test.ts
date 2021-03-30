@@ -16,13 +16,19 @@ describe("LoadSeason", () => {
     test("load from repository", () => {
         const { resource } = standard()
 
-        expect(resource.season.load()).toEqual({ success: true, value: { year: 2020 } })
+        expect(resource.season.load()).toEqual({
+            success: true,
+            value: { year: 2020, period: "summer" },
+        })
     })
 
     test("not found; use default", () => {
         const { resource } = empty()
 
-        expect(resource.season.load()).toEqual({ success: true, value: { year: 2021 } })
+        expect(resource.season.load()).toEqual({
+            success: true,
+            value: { year: 2021, period: "summer" },
+        })
     })
 
     test("save season", () => {
@@ -57,7 +63,7 @@ function initResource(season: SeasonRepositoryPod): LoadSeasonResource {
 
 function standard_season(): SeasonRepositoryPod {
     const season = mockDB()
-    season.set({ year: 2020 })
+    season.set({ year: 2020, period: "summer" })
     return wrapRepository(season)
 }
 function empty_season(): SeasonRepositoryPod {
