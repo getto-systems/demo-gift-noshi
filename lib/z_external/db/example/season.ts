@@ -7,6 +7,7 @@ import { DB } from "../infra"
 
 type Season = Readonly<{
     year: number
+    period: string
 }>
 export function newDB_Season(storage: Storage, key: string): DB<Season> {
     return initDB(storage, key, {

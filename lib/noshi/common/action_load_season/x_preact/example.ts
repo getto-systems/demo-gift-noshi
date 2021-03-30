@@ -12,6 +12,7 @@ import { LoadSeasonResource } from "../resource"
 
 import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
 import { Season } from "../../load_season/data"
+import { seasonPeriod } from "./period"
 
 export function ExampleComponent(resource: LoadSeasonResource): VNode {
     const result = resource.season.load()
@@ -32,7 +33,7 @@ function seasonBox(body: VNodeContent): VNode {
 }
 
 function seasonInfo(season: Season): VNodeContent {
-    return season.year
+    return `${season.year}年 ${seasonPeriod(season.period)}`
 }
 
 function loadError(err: RepositoryError): VNodeContent {

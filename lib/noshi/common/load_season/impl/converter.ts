@@ -17,7 +17,7 @@ export const seasonRepositoryConverter: RepositoryConverter<Season, SeasonReposi
 }
 
 export function defaultSeason(clock: Clock): Season {
-    return markSeason({ year: clock.now().getFullYear() })
+    return markSeason({ year: clock.now().getFullYear(), period: "summer" })
 }
 
 function markSeason(season: SeasonRepositoryValue): Season {
