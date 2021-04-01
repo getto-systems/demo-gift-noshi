@@ -31,7 +31,7 @@ enum PeriodEnum {
 }
 
 export default {
-    title: "library/Example/Common/Load Season",
+    title: "library/Noshi/Common/Load Season",
     parameters: {
         layout: "fullscreen",
     },

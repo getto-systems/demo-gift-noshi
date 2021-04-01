@@ -7,3 +7,6 @@ fi
 version=2.32.0
 find $APP_ROOT/public/ -name '*.html' | xargs sed -i "s|[^/]*/getto.css|${version}/getto.css|"
 find $APP_ROOT/storybook/ -name '*.html' | xargs sed -i "s|[^/]*/getto.css|${version}/getto.css|"
+
+title="のし印刷 - プレビュー"
+find $APP_ROOT/public/ -name '*.html' | xargs sed -i "s|<title>.*</title>|<title>${title}</title>|"
