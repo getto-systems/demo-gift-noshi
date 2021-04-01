@@ -1,3 +1,5 @@
+import { NoshiName } from "../name/data"
+
 export type DeliverySlip = Readonly<{
     data: DeliverySlipData
     printState: DeliverySlipPrintState
@@ -13,10 +15,12 @@ export type DeliverySlipData = Readonly<{
 
 export type DeliverySlipNumber = string & { DeliverySlipNumber: never }
 export type DeliverySlipType = "御歳暮" | "内祝"
-export type DeliverySlipSize = "b4" | "a4"
-
-export type NoshiName = string & { NoshiName: never }
+export type DeliverySlipSize = "A3" | "A4"
 
 export type NextDeliverySlip<T> =
     | Readonly<{ hasNext: false }>
     | Readonly<{ hasNext: true; next: T }>
+
+export type LoadCurrentDeliverySlipError =
+    | Readonly<{ type: "empty" }>
+    | Readonly<{ type: "not-found" }>

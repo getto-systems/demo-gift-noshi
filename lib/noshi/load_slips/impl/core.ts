@@ -2,10 +2,15 @@ import { deliverySlipNumberLocationConverter } from "./converter"
 
 import { LoadDeliverySlipsInfra } from "../infra"
 
-import { LoadDeliverySlipsLocationDetectMethod, LoadDeliverySlipsPod } from "../method"
+import {
+    LoadCurrentDeliverySlipPod,
+    LoadDeliverySlipsLocationDetectMethod,
+    LoadDeliverySlipsPod,
+} from "../method"
+
+import { LoadCurrentDeliverySlipEvent, LoadDeliverySlipsEvent } from "../event"
 
 import { DeliverySlip, DeliverySlipPrintState } from "../data"
-import { LoadDeliverySlipsEvent } from "../event"
 
 interface Detecter {
     (): LoadDeliverySlipsLocationDetectMethod
@@ -13,17 +18,22 @@ interface Detecter {
 export const detectDeliverySlipNumber: Detecter = () => (currentURL) =>
     deliverySlipNumberLocationConverter(currentURL)
 
-interface Load {
+interface LoadSlips {
     (infra: LoadDeliverySlipsInfra): LoadDeliverySlipsPod
 }
-export const loadDeliverySlips: Load = (infra) => (detecter) => async (post) => {
+export const loadDeliverySlips: LoadSlips = (infra) => (detecter) => async (post) => {
     const { slips } = infra
 
     const result = detecter()
     if (!result.valid) {
         post({
             type: "succeed-to-load",
-            slips: slips.map((data): DeliverySlip => ({ data, printState: "waiting" })),
+            slips: slips.map(
+                (data, index): DeliverySlip => ({
+                    data,
+                    printState: index === 0 ? "working" : "waiting",
+                }),
+            ),
         })
         return
     }
@@ -57,5 +67,35 @@ export const loadDeliverySlips: Load = (infra) => (detecter) => async (post) => 
 }
 
 export function loadDeliverySlipsEventHasDone(_event: LoadDeliverySlipsEvent): boolean {
+    return true
+}
+
+interface LoadCurrentSlip {
+    (infra: LoadDeliverySlipsInfra): LoadCurrentDeliverySlipPod
+}
+export const loadCurrentDeliverySlip: LoadCurrentSlip = (infra) => (detecter) => async (post) => {
+    const { slips } = infra
+
+    if (slips.length === 0) {
+        post({ type: "failed-to-load", err: { type: "empty" } })
+        return
+    }
+
+    const result = detecter()
+    if (!result.valid) {
+        post({ type: "succeed-to-load", slip: slips[0] })
+        return
+    }
+
+    const slip = slips.find((data) => data.number === result.value)
+    if (!slip) {
+        post({ type: "failed-to-load", err: { type: "not-found" } })
+        return
+    }
+
+    post({ type: "succeed-to-load", slip })
+}
+
+export function loadCurrentDeliverySlipEventHasDone(_event: LoadCurrentDeliverySlipEvent): boolean {
     return true
 }

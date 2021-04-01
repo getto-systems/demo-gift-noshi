@@ -5,7 +5,9 @@ import { detectDeliverySlipNumber } from "./core"
 import { LoadDeliverySlipsInfra } from "../infra"
 
 import { LoadDeliverySlipsLocationDetecter } from "../method"
-import { DeliverySlipNumber, NoshiName } from "../data"
+
+import { DeliverySlipNumber } from "../data"
+import { NoshiName } from "../../name/data"
 
 export function newLoadDeliverySlipsLocationDetecter(
     currentLocation: Location,
@@ -19,13 +21,13 @@ export function newLoadDeliverySlipsInfra(): LoadDeliverySlipsInfra {
             {
                 number: markDeliverySlipNumber("0001"),
                 name: markNoshiName("鈴木一郎"),
-                size: "a4",
+                size: "A4",
                 type: "御歳暮",
             },
             {
                 number: markDeliverySlipNumber("0002"),
                 name: markNoshiName("山田花子"),
-                size: "b4",
+                size: "A3",
                 type: "内祝",
             },
         ],

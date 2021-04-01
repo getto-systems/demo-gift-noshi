@@ -1,5 +1,6 @@
 DOCKER_WRAPPER_IMAGE_node(){ head -1 $APP_ROOT/.gitlab-ci.yml | sed "s/.*node:\(.*\)/\1/"; }
 DOCKER_WRAPPER_IMAGE_debian(){ echo "buster"; }
+DOCKER_WRAPPER_IMAGE_tex(){ echo "demo/gift-noshi:dev"; }
 
 DOCKER_WRAPPER_APP(){
   case $1 in

@@ -6,6 +6,9 @@ import { VNodeContent } from "../common"
 export function container(content: VNodeContent): VNode {
     return html`<section class="container">${content}</section>`
 }
+export function container_top(content: VNodeContent): VNode {
+    return html`<section class="container container_top">${content}</section>`
+}
 
 export type BoxContent =
     | BoxContent_body
@@ -68,7 +71,7 @@ function boxContent(boxClass: BoxClass, content: BoxContent): VNode {
     }
 }
 function boxTransparent(boxClass: BoxClass, content: VNodeContent): VNode {
-    return html`<article class="box box_transparent ${mapBoxClass(boxClass)}">${content}</article>`
+    return html`<article class="${mapBoxClass(boxClass)}">${content}</article>`
 }
 
 function boxHeader(title: VNodeContent) {

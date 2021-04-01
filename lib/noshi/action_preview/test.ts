@@ -1,17 +1,19 @@
-import { setupAsyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
+import {
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
+} from "../../z_vendor/getto-application/action/test_helper"
 
-import { mockLoadDeliverySlipsLocationDetecter } from "../load_slips/impl/mock"
+import { mockPreviewResource } from "./mock"
 
-import { newLoadDeliverySlipsInfra } from "../load_slips/impl/init"
-
-import { initPreviewAction } from "./impl"
-import { initPreviewSlipsAction, initPreviewSlipsMaterial } from "./slips/impl"
-
-import { loadDeliverySlipsEventHasDone } from "../load_slips/impl/core"
+import {
+    loadCurrentDeliverySlipEventHasDone,
+    loadDeliverySlipsEventHasDone,
+} from "../load_slips/impl/core"
 
 import { PreviewResource } from "./resource"
 
 import { PreviewSlipsState } from "./slips/action"
+import { PreviewCoreState } from "./core/action"
 
 describe("Preview", () => {
     test("load slips", () =>
@@ -32,16 +34,16 @@ describe("Preview", () => {
                                         data: {
                                             number: "0001",
                                             name: "鈴木一郎",
-                                            size: "a4",
+                                            size: "A4",
                                             type: "御歳暮",
                                         },
-                                        printState: "waiting",
+                                        printState: "working",
                                     },
                                     {
                                         data: {
                                             number: "0002",
                                             name: "山田花子",
-                                            size: "b4",
+                                            size: "A3",
                                             type: "内祝",
                                         },
                                         printState: "waiting",
@@ -74,7 +76,7 @@ describe("Preview", () => {
                                         data: {
                                             number: "0001",
                                             name: "鈴木一郎",
-                                            size: "a4",
+                                            size: "A4",
                                             type: "御歳暮",
                                         },
                                         printState: "done",
@@ -83,7 +85,7 @@ describe("Preview", () => {
                                         data: {
                                             number: "0002",
                                             name: "山田花子",
-                                            size: "b4",
+                                            size: "A3",
                                             type: "内祝",
                                         },
                                         printState: "working",
@@ -96,6 +98,89 @@ describe("Preview", () => {
             ])
 
             resource.preview.slips.subscriber.subscribe(runner(done))
+        }))
+
+    test("next slip href", () => {
+        const { resource } = standard()
+
+        expect(resource.preview.slips.nextSlipHref()).toEqual({ hasNext: false })
+    })
+
+    test("load slip", () =>
+        new Promise<void>((done) => {
+            const { resource } = standard()
+
+            const runner = setupAsyncActionTestRunner(coreActionHasDone, [
+                {
+                    statement: () => {
+                        resource.preview.core.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-load",
+                                slip: {
+                                    number: "0001",
+                                    name: "鈴木一郎",
+                                    size: "A4",
+                                    type: "御歳暮",
+                                },
+                            },
+                        ])
+                    },
+                },
+            ])
+
+            resource.preview.core.subscriber.subscribe(runner(done))
+        }))
+
+    test("load slip; numbered", () =>
+        new Promise<void>((done) => {
+            const { resource } = numbered()
+
+            const runner = setupAsyncActionTestRunner(coreActionHasDone, [
+                {
+                    statement: () => {
+                        resource.preview.core.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-load",
+                                slip: {
+                                    number: "0002",
+                                    name: "山田花子",
+                                    size: "A3",
+                                    type: "内祝",
+                                },
+                            },
+                        ])
+                    },
+                },
+            ])
+
+            resource.preview.core.subscriber.subscribe(runner(done))
+        }))
+
+    test("reset", () =>
+        new Promise<void>((done) => {
+            const { resource } = standard()
+
+            const runner = setupSyncActionTestRunner([
+                {
+                    statement: () => {
+                        resource.preview.form.reset()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([""])
+                    },
+                },
+            ])
+
+            const handler = runner(done)
+            resource.preview.form.noshiName.board.input.subscribeInputEvent(() =>
+                handler(resource.preview.form.noshiName.board.input.get()),
+            )
         }))
 })
 
@@ -111,16 +196,7 @@ function numbered() {
 }
 
 function initResource(url: URL): PreviewResource {
-    return {
-        preview: initPreviewAction(
-            initPreviewSlipsAction(
-                initPreviewSlipsMaterial(
-                    newLoadDeliverySlipsInfra(),
-                    mockLoadDeliverySlipsLocationDetecter(url),
-                ),
-            ),
-        ),
-    }
+    return mockPreviewResource(url)
 }
 
 function standard_URL(): URL {
@@ -130,6 +206,15 @@ function numbered_URL(): URL {
     return new URL("https://example.com/preview.html?number=0002")
 }
 
+function coreActionHasDone(state: PreviewCoreState): boolean {
+    switch (state.type) {
+        case "initial-preview":
+            return false
+
+        default:
+            return loadCurrentDeliverySlipEventHasDone(state)
+    }
+}
 function slipsActionHasDone(state: PreviewSlipsState): boolean {
     switch (state.type) {
         case "initial-slips":

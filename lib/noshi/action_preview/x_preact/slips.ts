@@ -67,7 +67,7 @@ export function PreviewSlipsComponent(props: Props): VNode {
 
 function buildStructure() {
     return tableStructure(key, [
-        tableCell("hasPrinted", (_key) => ({
+        tableCell("printState", (_key) => ({
             label: "印刷",
             header: linky,
             column: printState,
