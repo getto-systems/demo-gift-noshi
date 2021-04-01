@@ -1,3 +1,13 @@
+export type RemoteFeature = Readonly<{
+    serverURL: string
+    nonce: RemoteNonceGenerator
+}>
+
+export interface RemoteNonceGenerator {
+    (): RemoteNonce
+}
+export type RemoteNonce = string
+
 export type RemoteTypes<M, V, R, E> = {
     pod: RemotePod<M, V, R, E>
     remote: Remote<M, V, E>

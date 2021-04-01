@@ -6,6 +6,9 @@ import { VNodeContent } from "../common"
 export function container(content: VNodeContent): VNode {
     return html`<section class="container">${content}</section>`
 }
+export function container_top(content: VNodeContent): VNode {
+    return html`<section class="container container_top">${content}</section>`
+}
 
 export type BoxContent =
     | BoxContent_body
@@ -17,7 +20,7 @@ type BoxContent_title = Readonly<{ title: VNodeContent }>
 type BoxContent_body = Readonly<{ body: VNodeContent }>
 type BoxContent_footer = Readonly<{ footer: VNodeContent }>
 
-type BoxClass = "single" | "double" | "grow" | "fill"
+type BoxClass = "single" | "double" | "grow"
 function mapBoxClass(boxClass: BoxClass): string {
     switch (boxClass) {
         case "single":
@@ -37,8 +40,15 @@ export function box_double(content: BoxContent): VNode {
 export function box_grow(content: BoxContent): VNode {
     return boxContent("grow", content)
 }
-export function box_fill(content: BoxContent): VNode {
-    return boxContent("fill", content)
+
+export function box_transparent(content: VNodeContent): VNode {
+    return boxTransparent("single", content)
+}
+export function box_double_transparent(content: VNodeContent): VNode {
+    return boxTransparent("double", content)
+}
+export function box_grow_transparent(content: VNodeContent): VNode {
+    return boxTransparent("grow", content)
 }
 
 function boxContent(boxClass: BoxClass, content: BoxContent): VNode {
@@ -59,6 +69,9 @@ function boxContent(boxClass: BoxClass, content: BoxContent): VNode {
         }
         return ""
     }
+}
+function boxTransparent(boxClass: BoxClass, content: VNodeContent): VNode {
+    return html`<article class="${mapBoxClass(boxClass)}">${content}</article>`
 }
 
 function boxHeader(title: VNodeContent) {

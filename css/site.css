@@ -1,2 +1,45 @@
 @import "./font.css";
 @import "./line-icons.css";
+
+.noshi_a3 .noshi__body {
+    height: 296mm;
+    width: 420mm;
+}
+
+.noshi_a4 .noshi__body {
+    height: 209mm;
+    width: 297mm;
+}
+
+@media screen {
+    .noshi {
+        border: 1px solid var(--color-black);
+        box-shadow: 0.1rem 0.1rem 0.5rem var(--color-black-alpha);
+    }
+
+    .noshi__body {
+        background-color: var(--color-white);
+    }
+
+    .noshi_a3 .noshi__scale {
+        transform: scale(0.4775);
+        transform-origin: top left;
+
+        height: calc(296mm * 0.4775);
+        width: calc(420mm * 0.4775);
+    }
+
+    .noshi_a4 .noshi__scale {
+        transform: scale(0.675);
+        transform-origin: top left;
+
+        height: calc(209mm * 0.675);
+        width: calc(297mm * 0.675);
+    }
+}
+
+@media print {
+    .noshi {
+        margin: 0;
+    }
+}

@@ -1,3 +1,5 @@
+import { VNodeContent } from "../common"
+
 import {
     TableDataCellKey,
     TableDataColumnSimple,
@@ -26,7 +28,6 @@ import {
     TableDataColumnDecorator,
     TableDataColumnRelatedDecorator,
     TableDataContentDecorator,
-    TableDataContentProvider,
     TableDataHeaderDecorator,
     TableDataHorizontalBorderProvider,
     TableDataSummaryContentProvider,
@@ -52,7 +53,7 @@ export type TableDataSimpleContent<M, R> =
           TableDataSimpleContent_footer<M>)
 
 type TableDataSimpleContent_base<R> = Readonly<{
-    label: TableDataContentProvider
+    label: VNodeContent
     header: TableDataContentDecorator
     column: TableDataColumnContentProvider<R>
 }>
@@ -61,7 +62,7 @@ type TableDataSimpleContent_footer<M> = Readonly<{ footer: TableDataSummaryConte
 
 export function tableCell<M, R>(
     key: TableDataCellKey,
-    content: { (key: TableDataCellKey): TableDataSimpleContent<M, R> }
+    content: { (key: TableDataCellKey): TableDataSimpleContent<M, R> },
 ): TableCellSimple<M, R> {
     return new Cell(key, content(key))
 }
@@ -103,11 +104,14 @@ class Cell<M, R> implements TableCellSimple<M, R> {
         return {
             type: "view",
             key: this.key,
-            content: decorateContent(this.content.label(), decorator),
+            content: decorateContent(this.content.label, decorator),
             isVisible: this.isVisible(visibleKeys),
         }
     }
-    header({ visibleKeys, base }: TableDataStyledParams<M>): TableDataHeaderSimple | TableDataInvisible {
+    header({
+        visibleKeys,
+        base,
+    }: TableDataStyledParams<M>): TableDataHeaderSimple | TableDataInvisible {
         if (!this.isVisible(visibleKeys)) {
             return { type: "invisible" }
         }
@@ -116,7 +120,7 @@ class Cell<M, R> implements TableCellSimple<M, R> {
             type: "simple",
             key: this.key,
             style: mergeVerticalBorder(extendStyle({ base, style }), this.verticalBorder()),
-            content: this.content.header(this.content.label()),
+            content: this.content.header(this.content.label),
             length: 1,
             height: 1,
         }
@@ -148,9 +152,9 @@ class Cell<M, R> implements TableCellSimple<M, R> {
             style: mergeVerticalBorder(
                 decorators.reduce(
                     (acc, decorator) => decorateStyle(acc, decorator(row)),
-                    extendStyle({ base, style })
+                    extendStyle({ base, style }),
                 ),
-                this.verticalBorder()
+                this.verticalBorder(),
             ),
             content: this.content.column(row),
             length: 1,
@@ -170,7 +174,7 @@ class Cell<M, R> implements TableCellSimple<M, R> {
     }
     summaryContent(
         { visibleKeys, base, model }: TableDataStyledParams<M>,
-        { style, content }: SummaryContentParams<M>
+        { style, content }: SummaryContentParams<M>,
     ): TableDataSummarySimple | TableDataInvisible {
         if (!this.isVisible(visibleKeys)) {
             return { type: "invisible" }

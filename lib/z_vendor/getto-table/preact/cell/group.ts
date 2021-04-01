@@ -1,3 +1,5 @@
+import { VNodeContent } from "../common"
+
 import {
     TableDataCellKey,
     TableDataColumn,
@@ -26,7 +28,6 @@ import {
 import {
     TableDataColumnDecorator,
     TableDataColumnRelatedDecorator,
-    TableDataContentProvider,
     TableDataGroupDecorator,
     TableDataHeaderDecorator,
     TableDataHorizontalBorderProvider,
@@ -43,7 +44,7 @@ import {
 
 export type TableDataGroupContent<M, R> = Readonly<{
     key: TableDataCellKey
-    header: TableDataContentProvider
+    header: VNodeContent
     cells: TableCell<M, R>[]
 }>
 export function tableCell_group<M, R>(content: TableDataGroupContent<M, R>): TableCellGroup<M, R> {
@@ -83,9 +84,9 @@ class Cell<M, R> implements TableCellGroup<M, R> {
                     base: baseGroupStyle(params.base),
                     style,
                 }),
-                verticalBorder(children[0], children[children.length - 1])
+                verticalBorder(children[0], children[children.length - 1]),
             ),
-            content: this.content.header(),
+            content: this.content.header,
             children,
             length: length(children),
             height: height(children) + 1,
@@ -121,7 +122,7 @@ class Cell<M, R> implements TableCellGroup<M, R> {
                         case "group":
                             return height(header.children) + 1
                     }
-                })
+                }),
             )
         }
     }
@@ -130,7 +131,7 @@ class Cell<M, R> implements TableCellGroup<M, R> {
         return tableCellHeader(
             { ...params, base: baseGroupMemberStyle(params.base) },
             style,
-            this.content.cells
+            this.content.cells,
         )
     }
     summary(params: TableDataStyledParams<M>): TableDataSummary[] {

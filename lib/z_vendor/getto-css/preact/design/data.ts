@@ -103,14 +103,11 @@ export function pagerOptions({ all, step, content }: PagerOptionsContent): VNode
     }
 }
 
-type TableType = "normal" | "small" | "fill" | "smallFill"
+type TableType = "normal" | "small" | "fill" | "noMargin"
 function tableClass(type: TableType): string {
     switch (type) {
         case "normal":
             return ""
-
-        case "smallFill":
-            return "table_small table_fill"
 
         default:
             return `table_${type}`
@@ -118,19 +115,31 @@ function tableClass(type: TableType): string {
 }
 
 export function table(sticky: TableDataSticky, content: VNodeContent): VNode {
-    return tableContent("normal", sticky, content)
+    return tableContent(["normal"], sticky, content)
+}
+export function table_noMargin(sticky: TableDataSticky, content: VNodeContent): VNode {
+    return tableContent(["normal", "noMargin"], sticky, content)
 }
 export function table_small(sticky: TableDataSticky, content: VNodeContent): VNode {
-    return tableContent("small", sticky, content)
+    return tableContent(["small"], sticky, content)
+}
+export function table_small_noMargin(sticky: TableDataSticky, content: VNodeContent): VNode {
+    return tableContent(["small", "noMargin"], sticky, content)
 }
 export function table_fill(sticky: TableDataSticky, content: VNodeContent): VNode {
-    return tableContent("fill", sticky, content)
+    return tableContent(["fill"], sticky, content)
+}
+export function table_fill_noMargin(sticky: TableDataSticky, content: VNodeContent): VNode {
+    return tableContent(["fill", "noMargin"], sticky, content)
 }
 export function table_small_fill(sticky: TableDataSticky, content: VNodeContent): VNode {
-    return tableContent("smallFill", sticky, content)
+    return tableContent(["small", "fill"], sticky, content)
 }
-function tableContent(type: TableType, sticky: TableDataSticky, content: VNodeContent): VNode {
-    return html`<table class="table ${tableClass(type)} ${stickyTableClass(sticky)}">
+export function table_small_fill_noMargin(sticky: TableDataSticky, content: VNodeContent): VNode {
+    return tableContent(["small", "fill", "noMargin"], sticky, content)
+}
+function tableContent(types: TableType[], sticky: TableDataSticky, content: VNodeContent): VNode {
+    return html`<table class="table ${types.map(tableClass).join(" ")} ${stickyTableClass(sticky)}">
         ${content}
     </table>`
 }
@@ -192,7 +201,8 @@ export function tableHeader(content: TableHeaderContent): VNode[] {
         sticky,
         header: { key, className, headers },
     } = content
-    const singleLastBorderBottom = "singleLastBorderBottom" in content && content.singleLastBorderBottom
+    const singleLastBorderBottom =
+        "singleLastBorderBottom" in content && content.singleLastBorderBottom
 
     const base: BuildInfo = {
         sticky: { level: 0, borderWidth: 0 },
@@ -274,7 +284,7 @@ export function tableHeader(content: TableHeaderContent): VNode[] {
                                     },
                                     index: base.index + index,
                                 },
-                                header.children
+                                header.children,
                             ),
                         ])
                 }
@@ -293,7 +303,7 @@ export function tableHeader(content: TableHeaderContent): VNode[] {
                             },
                             containers: [],
                         }
-                    }
+                    },
                 )
         }
         function paddingHeight(header: TableDataHeader): number {
@@ -307,7 +317,7 @@ export function tableHeader(content: TableHeaderContent): VNode[] {
                     mergeRow(row, index),
                     ...acc.slice(index + 1),
                 ],
-                base
+                base,
             )
 
             function mergeRow(row: HeaderRow, index: number): HeaderRow {
@@ -349,7 +359,7 @@ export function tableHeader(content: TableHeaderContent): VNode[] {
                             bottom: bottomWidth(container),
                         },
                     })
-                }, initialBorderInfo())
+                }, initialBorderInfo()),
             )
         )
 
@@ -459,7 +469,12 @@ export function tableColumn(content: TableColumnContent): VNode[] {
     }
 
     function columnTd({ index, colspan, rowspan, style, column }: ColumnContainer): VNode {
-        return html`<td class="${className()}" colspan=${colspan} rowspan=${rowspan} key=${column.key}>
+        return html`<td
+            class="${className()}"
+            colspan=${colspan}
+            rowspan=${rowspan}
+            key=${column.key}
+        >
             ${content()}
         </td>`
 
@@ -484,7 +499,7 @@ export function tableColumn(content: TableColumnContent): VNode[] {
             .reduce(
                 (acc, column, index) =>
                     merge(acc, entry(column, { ...base, index: base.index + index })),
-                <ColumnRow[]>[]
+                <ColumnRow[]>[],
             )
             .map((row) => {
                 return {
@@ -506,7 +521,10 @@ export function tableColumn(content: TableColumnContent): VNode[] {
                     return treeEntry(column, info)
             }
         }
-        function simpleEntry(column: TableDataColumnSimple, { index }: BuildInfo): ColumnEntry_simple {
+        function simpleEntry(
+            column: TableDataColumnSimple,
+            { index }: BuildInfo,
+        ): ColumnEntry_simple {
             return {
                 type: "simple",
                 container: {
@@ -520,7 +538,7 @@ export function tableColumn(content: TableColumnContent): VNode[] {
         }
         function expansionEntry(
             column: TableDataColumnExpansion,
-            expansionBase: BuildInfo
+            expansionBase: BuildInfo,
         ): ColumnEntry {
             return {
                 type: "expansion",
@@ -531,7 +549,7 @@ export function tableColumn(content: TableColumnContent): VNode[] {
                     .map(
                         (column, index) =>
                             simpleEntry(column, { ...base, index: expansionBase.index + index })
-                                .container
+                                .container,
                     ),
             }
         }
@@ -546,8 +564,8 @@ export function tableColumn(content: TableColumnContent): VNode[] {
                             ...info,
                             bottom: info.bottom && index === rowHeight - 1,
                         },
-                        row
-                    )
+                        row,
+                    ),
                 ),
             }
         }
@@ -581,7 +599,11 @@ export function tableColumn(content: TableColumnContent): VNode[] {
                 }
             }
 
-            function mergeExpansion({ index, column, containers }: ColumnEntry_expansion): ColumnRow[] {
+            function mergeExpansion({
+                index,
+                column,
+                containers,
+            }: ColumnEntry_expansion): ColumnRow[] {
                 if (base.length === 0) {
                     return [
                         {
@@ -623,7 +645,7 @@ export function tableColumn(content: TableColumnContent): VNode[] {
                         mergeRow(row, index),
                         ...acc.slice(index + 1),
                     ],
-                    base
+                    base,
                 )
 
                 function mergeRow(row: ColumnRow, index: number): ColumnRow {
@@ -690,10 +712,9 @@ export function tableFooter({
     return [tr([key], className, footers.map(summaryTd(sticky)))]
 }
 
-const summaryTd = (sticky: TableDataSticky): { (summary: TableDataSummary, index: number): VNode } => (
-    summary,
-    index
-) => {
+const summaryTd = (
+    sticky: TableDataSticky,
+): { (summary: TableDataSummary, index: number): VNode } => (summary, index) => {
     return html`<td class="${className()}" colspan=${summary.length} key=${summary.key}>
         ${summaryContent(summary)}
     </td>`
@@ -780,7 +801,7 @@ type StickyHeaderContent = Readonly<{
 }>
 function stickyHeaderClass(
     sticky: TableDataSticky,
-    { info: { level, borderWidth }, index }: StickyHeaderContent
+    { info: { level, borderWidth }, index }: StickyHeaderContent,
 ): string[] {
     switch (sticky.type) {
         case "none":

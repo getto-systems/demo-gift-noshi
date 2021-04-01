@@ -34,23 +34,24 @@ import {
 } from "../core"
 import { tableDataMutable_row } from "../mutable/row"
 
-export type TableStructureContent<M, R> = Readonly<{
-    key: TableDataRowKeyProvider<R>
-    cells: TableCell<M, R>[]
-}>
-export function tableStructure<M, R>(content: TableStructureContent<M, R>): TableStructure_hot<M, R> {
-    return new Structure(content)
+export function tableStructure<M, R>(
+    key: TableDataRowKeyProvider<R>,
+    cells: TableCell<M, R>[],
+): TableStructure_hot<M, R> {
+    return new Structure(key, cells)
 }
 class Structure<M, R> implements TableStructure<M, R>, TableStructure_hot<M, R> {
-    content: TableStructureContent<M, R>
+    key: TableDataRowKeyProvider<R>
+    cells: TableCell<M, R>[]
     mutable: Readonly<{
         core: TableDataMutable_base<R>
         tree: TableDataMutable_tree<R>
         row: TableDataMutable_row
     }>
 
-    constructor(content: TableStructureContent<M, R>) {
-        this.content = content
+    constructor(key: TableDataRowKeyProvider<R>, cells: TableCell<M, R>[]) {
+        this.key = key
+        this.cells = cells
         this.mutable = {
             core: tableDataMutable_default(),
             tree: tableDataMutable_tree(),
@@ -59,7 +60,7 @@ class Structure<M, R> implements TableStructure<M, R>, TableStructure_hot<M, R> 
     }
 
     view(params: TableDataParams<M>): TableDataView[] {
-        return tableCellView(params, this.content.cells)
+        return tableCellView(params, this.cells)
     }
     header(params: TableDataParams<M>): TableDataHeaderRow {
         const { style } = this.mutable.core.headerStyleMutable()
@@ -67,7 +68,7 @@ class Structure<M, R> implements TableStructure<M, R>, TableStructure_hot<M, R> 
         return {
             key: headerRow.key,
             className: headerRow.style.className,
-            headers: tableCellBaseHeader(params, style, this.content.cells),
+            headers: tableCellBaseHeader(params, style, this.cells),
         }
     }
     summary(params: TableDataParams<M>): TableDataSummaryRow {
@@ -76,7 +77,7 @@ class Structure<M, R> implements TableStructure<M, R>, TableStructure_hot<M, R> 
         return {
             key: summaryRow.key(),
             className: summaryRow.style.className,
-            summaries: tableCellBaseSummary(params, style, this.content.cells),
+            summaries: tableCellBaseSummary(params, style, this.cells),
         }
     }
     column(params: TableDataParams<M>, row: R): TableDataColumnRow {
@@ -84,9 +85,9 @@ class Structure<M, R> implements TableStructure<M, R>, TableStructure_hot<M, R> 
         const treeRow = this.mutable.tree.rowMutable()
         const { decorators } = this.mutable.core.columnMutable()
         return {
-            key: this.content.key(row),
+            key: this.key(row),
             className: treeRow.style.className,
-            columns: tableCellBaseColumn(params, style, decorators, this.content.cells, row),
+            columns: tableCellBaseColumn(params, style, decorators, this.cells, row),
         }
     }
     footer(params: TableDataParams<M>): TableDataFooterRow {
@@ -95,7 +96,7 @@ class Structure<M, R> implements TableStructure<M, R>, TableStructure_hot<M, R> 
         return {
             key: footerRow.key(),
             className: footerRow.style.className,
-            footers: tableCellBaseFooter(params, style, this.content.cells),
+            footers: tableCellBaseFooter(params, style, this.cells),
         }
     }
 
@@ -103,7 +104,9 @@ class Structure<M, R> implements TableStructure<M, R>, TableStructure_hot<M, R> 
         this.mutable.core.horizontalBorder(borders)
         return this
     }
-    horizontalBorderRelated(borders: TableDataHorizontalBorderProvider<R>): TableStructure_hot<M, R> {
+    horizontalBorderRelated(
+        borders: TableDataHorizontalBorderProvider<R>,
+    ): TableStructure_hot<M, R> {
         this.mutable.core.horizontalBorderRelated(borders)
         return this
     }

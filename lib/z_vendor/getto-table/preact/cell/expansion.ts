@@ -1,3 +1,5 @@
+import { VNodeContent } from "../common"
+
 import {
     TableDataCellKey,
     TableDataColumnExpansion,
@@ -27,7 +29,6 @@ import {
     TableDataColumnDecorator,
     TableDataColumnRelatedDecorator,
     TableDataContentDecorator,
-    TableDataContentProvider,
     TableDataHeaderDecorator,
     TableDataHorizontalBorderProvider,
     TableDataSummaryContentProvider,
@@ -53,17 +54,19 @@ export type TableDataExpansionContent<M, R> =
           TableDataExpansionContent_footer<M>)
 
 type TableDataExpansionContent_base<M, R> = Readonly<{
-    label: TableDataContentProvider
+    label: VNodeContent
     header: TableDataContentDecorator
     column: TableDataExpansionColumnContentProvider<R>
     length: TableDataExpansionLengthProvider<M>
 }>
-type TableDataExpansionContent_summary<M> = Readonly<{ summary: TableDataSummaryContentProvider<M> }>
+type TableDataExpansionContent_summary<M> = Readonly<{
+    summary: TableDataSummaryContentProvider<M>
+}>
 type TableDataExpansionContent_footer<M> = Readonly<{ footer: TableDataSummaryContentProvider<M> }>
 
 export function tableCell_expansion<M, R>(
     key: TableDataCellKey,
-    content: { (key: TableDataCellKey): TableDataExpansionContent<M, R> }
+    content: { (key: TableDataCellKey): TableDataExpansionContent<M, R> },
 ): TableCellExpansion<M, R> {
     return new Cell(key, content(key))
 }
@@ -109,7 +112,7 @@ class Cell<M, R> implements TableCellExpansion<M, R> {
         return {
             type: "view",
             key: this.key,
-            content: decorateContent(this.content.label(), decorator),
+            content: decorateContent(this.content.label, decorator),
             isVisible: this.isVisible(visibleKeys),
         }
     }
@@ -126,7 +129,7 @@ class Cell<M, R> implements TableCellExpansion<M, R> {
             type: "expansion",
             key: this.key,
             style: mergeVerticalBorder(extendStyle({ base, style }), this.verticalBorder()),
-            content: this.content.header(this.content.label()),
+            content: this.content.header(this.content.label),
             length: this.length(model),
             height: 1,
         }
@@ -158,9 +161,9 @@ class Cell<M, R> implements TableCellExpansion<M, R> {
         const columnStyle = mergeVerticalBorder(
             decorators.reduce(
                 (acc, decorator) => decorateStyle(acc, decorator(row)),
-                extendStyle({ base, style })
+                extendStyle({ base, style }),
             ),
-            this.verticalBorder()
+            this.verticalBorder(),
         )
         return {
             type: "expansion",
@@ -178,7 +181,7 @@ class Cell<M, R> implements TableCellExpansion<M, R> {
                         length: 1,
                         height: 1,
                     }
-                }
+                },
             ),
         }
     }
@@ -196,7 +199,7 @@ class Cell<M, R> implements TableCellExpansion<M, R> {
 
     summaryContent(
         { visibleKeys, base, model }: TableDataStyledParams<M>,
-        { style, content }: SummaryContentParams<M>
+        { style, content }: SummaryContentParams<M>,
     ): TableDataSummaryExpansion | TableDataInvisible {
         if (!this.isVisible(visibleKeys)) {
             return { type: "invisible" }
@@ -232,7 +235,9 @@ class Cell<M, R> implements TableCellExpansion<M, R> {
         this.mutable.base.horizontalBorder(borders)
         return this
     }
-    horizontalBorderRelated(borders: TableDataHorizontalBorderProvider<R>): TableCellExpansion<M, R> {
+    horizontalBorderRelated(
+        borders: TableDataHorizontalBorderProvider<R>,
+    ): TableCellExpansion<M, R> {
         this.mutable.base.horizontalBorderRelated(borders)
         return this
     }

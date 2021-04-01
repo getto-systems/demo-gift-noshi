@@ -11,6 +11,9 @@ export function homeMenuContent(): MenuContent {
                 item("ホーム", lnir("home"), "/index.html"),
                 item("ドキュメント", lnir("files-alt"), "/docs/index.html"),
             ]),
+            category("のし", allow, [
+                item("印刷", lnir("empty-file"), "/print.html"),
+            ]),
         ],
     }
 }
