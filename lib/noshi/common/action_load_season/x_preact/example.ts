@@ -24,7 +24,7 @@ export function ExampleComponent(resource: LoadSeasonResource): VNode {
 
 function seasonBox(body: VNodeContent): VNode {
     return box_double({
-        title: "GETTO Example",
+        title: "のし印刷",
         body: field({
             title: "シーズン",
             body,
