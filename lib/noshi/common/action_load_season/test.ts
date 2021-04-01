@@ -52,7 +52,7 @@ function empty() {
 }
 
 function initResource(season: SeasonRepositoryPod): LoadSeasonResource {
-    const clock = mockClock(new Date("2021-01-01 10:00:00"), mockClockPubSub())
+    const clock = mockClock(new Date("2021-04-01 10:00:00"), mockClockPubSub())
     return {
         season: initLoadSeasonCoreAction({
             season,
