@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { box_double } from "../../../../z_vendor/getto-css/preact/design/box"
+import { box_double, container } from "../../../../z_vendor/getto-css/preact/design/box"
 import { field } from "../../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../../z_vendor/getto-css/preact/design/alignment"
@@ -23,13 +23,15 @@ export function ExampleComponent(resource: LoadSeasonResource): VNode {
 }
 
 function seasonBox(body: VNodeContent): VNode {
-    return box_double({
-        title: "のし印刷",
-        body: field({
-            title: "シーズン",
-            body,
+    return container(
+        box_double({
+            title: "のし印刷",
+            body: field({
+                title: "シーズン",
+                body,
+            }),
         }),
-    })
+    )
 }
 
 function seasonInfo(season: Season): VNodeContent {
