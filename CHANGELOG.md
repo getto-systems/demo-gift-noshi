@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.2.2
+
+- rename: not-found.html : See merge request getto-systems-base/projects/demo/gift-noshi!21
+
+
 ## Version : 0.2.1
 
 - allow: unsafe-eval : See merge request getto-systems-base/projects/demo/gift-noshi!19
