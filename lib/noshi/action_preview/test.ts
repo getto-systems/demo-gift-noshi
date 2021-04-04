@@ -179,10 +179,8 @@ describe("Preview", () => {
                     },
                     examine: (stack) => {
                         expect(stack).toEqual([
-                            {
-                                type: "succeed-to-print",
-                                href: "#object-url",
-                            },
+                            { type: "try-to-print" },
+                            { type: "succeed-to-print", href: "#object-url" },
                         ])
                     },
                 },
