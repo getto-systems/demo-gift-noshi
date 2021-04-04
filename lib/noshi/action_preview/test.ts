@@ -181,7 +181,7 @@ describe("Preview", () => {
                         expect(stack).toEqual([
                             {
                                 type: "succeed-to-print",
-                                href: "object-url",
+                                href: "#object-url",
                             },
                         ])
                     },
@@ -223,7 +223,7 @@ function numbered_URL(): URL {
 }
 
 function standard_sheet(): DeliverySlipSheet {
-    return async () => "object-url"
+    return async () => ({ success: true, href: "#object-url" })
 }
 
 function coreActionHasDone(state: PreviewCoreState): boolean {
@@ -231,6 +231,7 @@ function coreActionHasDone(state: PreviewCoreState): boolean {
         case "initial-preview":
             return false
 
+        case "try-to-print":
         case "succeed-to-print":
         case "failed-to-print":
             return printDeliverySlipsEventHasDone(state)

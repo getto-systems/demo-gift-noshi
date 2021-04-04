@@ -5,7 +5,7 @@ import { useApplicationAction } from "../../../z_vendor/getto-application/action
 
 import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 import { buttons, button_send, field } from "../../../z_vendor/getto-css/preact/design/form"
-import { box, container_top } from "../../../z_vendor/getto-css/preact/design/box"
+import { box, container, container_top } from "../../../z_vendor/getto-css/preact/design/box"
 
 import { PreviewResource, PreviewResourceState } from "../resource"
 
@@ -29,19 +29,31 @@ export function PreviewComponent(props: Props): VNode {
         case "succeed-to-load":
             return preview(props.state.slip, props.state.next)
 
+        case "try-to-print":
+            return container(
+                box({
+                    title: "データ作成中",
+                    body: "印刷用エクセルを作成しています",
+                }),
+            )
+
         case "succeed-to-print":
-            return html`<a href="${props.state.href}" download="ダウンロード.xlsx">ダウンロード</a>`
+            return download(props.state.href)
 
         case "failed-to-load":
-            return box({
-                title: "ロードエラー",
-                body: notice_alert(loadError(props.state.err)),
-            })
+            return container(
+                box({
+                    title: "ロードエラー",
+                    body: notice_alert(loadError(props.state.err)),
+                }),
+            )
         case "failed-to-print":
-            return box({
-                title: "印刷エラー",
-                body: notice_alert(printError(props.state.err)),
-            })
+            return container(
+                box({
+                    title: "印刷エラー",
+                    body: notice_alert(printError(props.state.err)),
+                }),
+            )
     }
 
     function preview(slip: DeliverySlipData, nextSlip: NextDeliverySlipHref): VNode {
@@ -77,7 +89,11 @@ export function PreviewComponent(props: Props): VNode {
         }
 
         function nextSlipButton(): VNode {
-            return button_send({ label: "次へ", state: "confirm", onClick })
+            if (nextSlip.hasNext) {
+                return button_send({ label: "次へ", state: "confirm", onClick })
+            } else {
+                return button_send({ label: "印刷", state: "confirm", onClick })
+            }
 
             function onClick(e: Event) {
                 e.preventDefault()
@@ -88,6 +104,24 @@ export function PreviewComponent(props: Props): VNode {
                     props.preview.core.print()
                 }
             }
+        }
+    }
+    function download(href: string): VNode {
+        return container(
+            box({
+                title: "印刷用エクセル",
+                body: html`<ul>
+                    <li>${downloadLink()}</li>
+                    <li>${resetLink()}</li>
+                </ul>`,
+            }),
+        )
+
+        function downloadLink(): VNode {
+            return html`<a href="${href}" download="のし.xlsx">ダウンロード</a>`
+        }
+        function resetLink(): VNode {
+            return html`<a href="?">リセット</a>`
         }
     }
 }
