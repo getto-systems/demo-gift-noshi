@@ -11,7 +11,7 @@ const headers = {
     "img-src 'self'",
     "font-src 'self'",
     "manifest-src 'self'",
-    "script-src 'self'",
+    "script-src 'self' 'unsafe-eval'",
     "style-src " + [
       "'self'",
       "https://trellis.getto.systems/css/",
