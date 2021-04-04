@@ -61,7 +61,15 @@ export function PreviewComponent(props: Props): VNode {
 
         function noshi(): VNode {
             return html`<article class="noshi noshi_${slip.size.toLowerCase()}">
-                <div class="noshi__scale"><section class="noshi__body">ここに名入れ</section></div>
+                <div class="noshi__scale">
+                    <section class="noshi__body">
+                        <div class="noshi__column">
+                            <span class="noshi__type">${slip.type}</span>
+                            <span class="noshi__padding"></span>
+                            <span class="noshi__name">${slip.name}</span>
+                        </div>
+                    </section>
+                </div>
             </article>`
         }
         function form(): VNode {
@@ -111,7 +119,7 @@ export function PreviewComponent(props: Props): VNode {
             box({
                 title: "印刷用エクセル",
                 body: downloadLink(),
-                footer: resetLink()
+                footer: resetLink(),
             }),
         )
 
