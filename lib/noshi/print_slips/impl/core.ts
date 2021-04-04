@@ -10,10 +10,23 @@ interface PrintSlips {
 export const printDeliverySlips: PrintSlips = (infra) => async (post) => {
     const { slips, sheet } = infra
 
-    const href = await sheet(slips)
-    post({ type: "succeed-to-print", href })
+    post({ type: "try-to-print" })
+
+    const result = await sheet(slips)
+    if (!result.success) {
+        post({ type: "failed-to-print", err: result.err })
+        return
+    }
+    post({ type: "succeed-to-print", href: result.href })
 }
 
-export function printDeliverySlipsEventHasDone(_event: PrintDeliverySlipsEvent): boolean {
-    return true
+export function printDeliverySlipsEventHasDone(event: PrintDeliverySlipsEvent): boolean {
+    switch (event.type) {
+        case "try-to-print":
+            return false
+
+        case "succeed-to-print":
+        case "failed-to-print":
+            return true
+    }
 }

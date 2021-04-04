@@ -5,6 +5,6 @@ import { PrintDeliverySlipsInfra } from "../infra"
 export function mockPrintDeliverySlipsInfra(): PrintDeliverySlipsInfra {
     return {
         ...newLoadDeliverySlipsInfra(),
-        sheet: async () => "#object-url",
+        sheet: async () => ({ success: true, href: "#object-url" }),
     }
 }
