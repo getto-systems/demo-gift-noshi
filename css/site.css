@@ -1,14 +1,47 @@
 @import "./font.css";
 @import "./line-icons.css";
 
+.noshi__body {
+    display: flex;
+    justify-content: center;
+}
+
+.noshi__column {
+    font-family: "HG正楷書体-PRO", serif;
+    font-weight: bold;
+    writing-mode: vertical-rl;
+}
+
+.noshi__padding {
+    display: inline-block;
+}
+
 .noshi_a3 .noshi__body {
-    height: 296mm;
+    height: 297mm;
     width: 420mm;
 }
 
+.noshi_a3 .noshi__column {
+    margin-top: 1em;
+    font-size: 75pt;
+}
+
+.noshi_a3 .noshi__padding {
+    height: 2em;
+}
+
 .noshi_a4 .noshi__body {
-    height: 209mm;
+    height: 210mm;
     width: 297mm;
+}
+
+.noshi_a4 .noshi__column {
+    margin-top: 0.5em;
+    font-size: 60pt;
+}
+
+.noshi_a4 .noshi__padding {
+    height: 2em;
 }
 
 @media screen {
