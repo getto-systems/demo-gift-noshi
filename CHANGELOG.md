@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version : 0.2.0
+
+- fix: sheet style : See merge request getto-systems-base/projects/demo/gift-noshi!17
+- fix: sheet layout : See merge request getto-systems-base/projects/demo/gift-noshi!16
+- fix: print flow : See merge request getto-systems-base/projects/demo/gift-noshi!15
+- fix: print to excel : See merge request getto-systems-base/projects/demo/gift-noshi!14
+
+
 ## Version : 0.1.0
 
 - fix: gitlab-ci : See merge request getto-systems-base/projects/demo/gift-noshi!12
