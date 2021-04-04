@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.2.1
+
+- allow: unsafe-eval : See merge request getto-systems-base/projects/demo/gift-noshi!19
+
+
 ## Version : 0.2.0
 
 - fix: sheet style : See merge request getto-systems-base/projects/demo/gift-noshi!17
