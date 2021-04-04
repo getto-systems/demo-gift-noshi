@@ -1,23 +1,19 @@
 import { h, VNode } from "preact"
-import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { useApplicationAction } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
-import {
-    buttons,
-    button_send,
-    button_undo,
-    field,
-} from "../../../z_vendor/getto-css/preact/design/form"
+import { buttons, button_send, field } from "../../../z_vendor/getto-css/preact/design/form"
 import { box, container_top } from "../../../z_vendor/getto-css/preact/design/box"
-
-import { InputNoshiNameComponent } from "../../name/action_input/x_preact/input"
 
 import { PreviewResource, PreviewResourceState } from "../resource"
 
-import { DeliverySlipData, LoadCurrentDeliverySlipError } from "../../load_slips/data"
+import {
+    DeliverySlipData,
+    LoadCurrentDeliverySlipError,
+    NextDeliverySlipHref,
+} from "../../load_slips/data"
 
 export function PreviewEntry(resource: PreviewResource): VNode {
     return h(PreviewComponent, {
@@ -28,20 +24,6 @@ export function PreviewEntry(resource: PreviewResource): VNode {
 
 type Props = PreviewResource & PreviewResourceState
 export function PreviewComponent(props: Props): VNode {
-    useEffect(() => {
-        switch (props.state.type) {
-            case "succeed-to-load":
-            // appendLink(props.state.slip)
-        }
-
-        function _appendLink(slip: DeliverySlipData) {
-            const link = document.createElement("link")
-            link.setAttribute("rel", "stylesheet")
-            link.setAttribute("href", `/dist/css/${slip.size.toLowerCase()}.css`)
-            document.body.appendChild(link)
-        }
-    }, [props.state])
-
     switch (props.state.type) {
         case "initial-preview":
             return EMPTY_CONTENT
@@ -53,10 +35,13 @@ export function PreviewComponent(props: Props): VNode {
             })
 
         case "succeed-to-load":
-            return preview(props.state.slip)
+            return preview(props.state.slip, props.state.next)
+
+        case "succeed-to-print":
+            return html`<a href="${props.state.href}" download="ダウンロード.xlsx">ダウンロード</a>`
     }
 
-    function preview(slip: DeliverySlipData): VNode {
+    function preview(slip: DeliverySlipData, nextSlip: NextDeliverySlipHref): VNode {
         return container_top([noshi(), form()])
 
         function noshi(): VNode {
@@ -76,28 +61,29 @@ export function PreviewComponent(props: Props): VNode {
                         title: "サイズ",
                         body: slip.size,
                     }),
-                    h(InputNoshiNameComponent, { field: props.preview.form.noshiName }),
+                    field({
+                        title: "名入れ",
+                        body: html`<input type="text" disabled value="${slip.name}" />`,
+                        help: ["(プレビュー版では変更できません)"],
+                    }),
                 ],
                 footer: buttons({
-                    left: printButton(),
-                    right: resetButton(),
+                    left: nextSlipButton(),
                 }),
             })
         }
 
-        function printButton(): VNode {
-            return button_send({ label: "印刷", state: "confirm", onClick })
+        function nextSlipButton(): VNode {
+            return button_send({ label: "次へ", state: "confirm", onClick })
 
             function onClick(e: Event) {
                 e.preventDefault()
-                alert("ここで印刷！")
-            }
-        }
-        function resetButton(): VNode {
-            return button_undo({ label: "元に戻す", onClick })
 
-            function onClick() {
-                props.preview.form.reset()
+                if (nextSlip.hasNext) {
+                    location.href = nextSlip.href
+                } else {
+                    props.preview.core.print()
+                }
             }
         }
     }

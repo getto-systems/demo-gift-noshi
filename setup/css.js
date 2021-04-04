@@ -13,16 +13,6 @@ compile({
     plugins: [autoprefixer()],
 })
 
-const papers = ["a4", "a3"]
-
-papers.forEach((size) => {
-    compile({
-        source: path.join(__dirname, `../css/${size}.css`),
-        output: path.join(__dirname, `../public/dist/css/${size}.css`),
-        plugins: [autoprefixer()],
-    })
-})
-
 function compile({ source, output, plugins }) {
     fs.readFile(source, (_err, css) => {
         postcss(plugins)

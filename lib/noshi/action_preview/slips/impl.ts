@@ -13,8 +13,6 @@ import {
 
 import { LoadDeliverySlipsLocationDetecter } from "../../load_slips/method"
 
-import { NextDeliverySlip } from "../../load_slips/data"
-
 export type PreviewSlipsInfra = LoadDeliverySlipsInfra
 
 export function initPreviewSlipsMaterial(
@@ -44,9 +42,5 @@ class Action
         this.igniteHook(() => {
             this.material.load(this.post)
         })
-    }
-
-    nextSlipHref(): NextDeliverySlip<string> {
-        return { hasNext: false }
     }
 }

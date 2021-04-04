@@ -3,11 +3,8 @@ import { ApplicationStateAction } from "../../../z_vendor/getto-application/acti
 import { LoadDeliverySlipsMethod } from "../../load_slips/method"
 
 import { LoadDeliverySlipsEvent } from "../../load_slips/event"
-import { NextDeliverySlip } from "../../load_slips/data"
 
-export interface PreviewSlipsAction extends ApplicationStateAction<PreviewSlipsState> {
-    nextSlipHref(): NextDeliverySlip<string>
-}
+export type PreviewSlipsAction = ApplicationStateAction<PreviewSlipsState>
 
 export type PreviewSlipsMaterial = Readonly<{
     load: LoadDeliverySlipsMethod

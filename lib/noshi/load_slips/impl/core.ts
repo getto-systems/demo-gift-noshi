@@ -1,4 +1,4 @@
-import { deliverySlipNumberLocationConverter } from "./converter"
+import { deliverySlipHrefConverter, deliverySlipNumberLocationConverter } from "./converter"
 
 import { LoadDeliverySlipsInfra } from "../infra"
 
@@ -10,7 +10,12 @@ import {
 
 import { LoadCurrentDeliverySlipEvent, LoadDeliverySlipsEvent } from "../event"
 
-import { DeliverySlip, DeliverySlipPrintState } from "../data"
+import {
+    DeliverySlip,
+    DeliverySlipData,
+    DeliverySlipPrintState,
+    NextDeliverySlipHref,
+} from "../data"
 
 interface Detecter {
     (): LoadDeliverySlipsLocationDetectMethod
@@ -83,7 +88,8 @@ export const loadCurrentDeliverySlip: LoadCurrentSlip = (infra) => (detecter) =>
 
     const result = detecter()
     if (!result.valid) {
-        post({ type: "succeed-to-load", slip: slips[0] })
+        const slip = slips[0]
+        post({ type: "succeed-to-load", slip, next: nextSlip(slip) })
         return
     }
 
@@ -93,7 +99,48 @@ export const loadCurrentDeliverySlip: LoadCurrentSlip = (infra) => (detecter) =>
         return
     }
 
-    post({ type: "succeed-to-load", slip })
+    post({ type: "succeed-to-load", slip, next: nextSlip(slip) })
+
+    function nextSlip(current: DeliverySlipData): NextDeliverySlipHref {
+        type MatchResult =
+            | Readonly<{ isMatched: false }>
+            | Readonly<{ isMatched: true; next: NextResult }>
+        type NextResult =
+            | Readonly<{ isProcessed: false }>
+            | Readonly<{ isProcessed: true; href: string }>
+        return nextHref(
+            slips.reduce(
+                (acc, slip): MatchResult => {
+                    if (acc.isMatched) {
+                        if (acc.next.isProcessed) {
+                            return acc
+                        }
+                        return {
+                            isMatched: true,
+                            next: { isProcessed: true, href: deliverySlipHrefConverter(slip) },
+                        }
+                    }
+                    return {
+                        isMatched: slip.number === current.number,
+                        next: { isProcessed: false },
+                    }
+                },
+                <MatchResult>{ isMatched: false },
+            ),
+        )
+
+        function nextHref(result: MatchResult): NextDeliverySlipHref {
+            if (!result.isMatched) {
+                // current は必ず slips に含まれているのでマッチしないことはないので
+                // 実際にはここには来ない
+                throw new Error("not matched")
+            }
+            if (!result.next.isProcessed) {
+                return { hasNext: false }
+            }
+            return { hasNext: true, href: result.next.href }
+        }
+    }
 }
 
 export function loadCurrentDeliverySlipEventHasDone(_event: LoadCurrentDeliverySlipEvent): boolean {

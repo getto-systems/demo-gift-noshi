@@ -13,6 +13,8 @@ import {
 
 import { LoadDeliverySlipsLocationDetecter } from "../../load_slips/method"
 
+import { Workbook } from "exceljs"
+
 export type PreviewCoreInfra = LoadDeliverySlipsInfra
 
 export function initPreviewCoreMaterial(
@@ -39,6 +41,20 @@ class Action extends ApplicationAbstractStateAction<PreviewCoreState> implements
 
         this.igniteHook(() => {
             this.material.load(this.post)
+        })
+    }
+
+    print(): void {
+        const workbook = new Workbook()
+        workbook.addWorksheet("my sheet")
+        const result = workbook.xlsx.writeBuffer()
+        result.then((buffer) => {
+            const href = URL.createObjectURL(
+                new Blob([buffer], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                }),
+            )
+            this.post({ type: "succeed-to-print", href })
         })
     }
 }

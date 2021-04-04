@@ -1,7 +1,4 @@
-import {
-    setupAsyncActionTestRunner,
-    setupSyncActionTestRunner,
-} from "../../z_vendor/getto-application/action/test_helper"
+import { setupAsyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
 import { mockPreviewResource } from "./mock"
 
@@ -100,12 +97,6 @@ describe("Preview", () => {
             resource.preview.slips.subscriber.subscribe(runner(done))
         }))
 
-    test("next slip href", () => {
-        const { resource } = standard()
-
-        expect(resource.preview.slips.nextSlipHref()).toEqual({ hasNext: false })
-    })
-
     test("load slip", () =>
         new Promise<void>((done) => {
             const { resource } = standard()
@@ -161,27 +152,6 @@ describe("Preview", () => {
 
             resource.preview.core.subscriber.subscribe(runner(done))
         }))
-
-    test("reset", () =>
-        new Promise<void>((done) => {
-            const { resource } = standard()
-
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        resource.preview.form.reset()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([""])
-                    },
-                },
-            ])
-
-            const handler = runner(done)
-            resource.preview.form.noshiName.board.input.subscribeInputEvent(() =>
-                handler(resource.preview.form.noshiName.board.input.get()),
-            )
-        }))
 })
 
 function standard() {
@@ -210,6 +180,9 @@ function coreActionHasDone(state: PreviewCoreState): boolean {
     switch (state.type) {
         case "initial-preview":
             return false
+
+        case "succeed-to-print":
+            return true
 
         default:
             return loadCurrentDeliverySlipEventHasDone(state)

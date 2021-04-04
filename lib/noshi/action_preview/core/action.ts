@@ -4,12 +4,17 @@ import { LoadCurrentDeliverySlipMethod } from "../../load_slips/method"
 
 import { LoadCurrentDeliverySlipEvent } from "../../load_slips/event"
 
-export type PreviewCoreAction = ApplicationStateAction<PreviewCoreState>
+export interface PreviewCoreAction extends ApplicationStateAction<PreviewCoreState> {
+    print(): void
+}
 
 export type PreviewCoreMaterial = Readonly<{
     load: LoadCurrentDeliverySlipMethod
 }>
 
-export type PreviewCoreState = Readonly<{ type: "initial-preview" }> | LoadCurrentDeliverySlipEvent
+export type PreviewCoreState =
+    | Readonly<{ type: "initial-preview" }>
+    | Readonly<{ type: "succeed-to-print"; href: string }>
+    | LoadCurrentDeliverySlipEvent
 
 export const initialPreviewCoreState: PreviewCoreState = { type: "initial-preview" }
