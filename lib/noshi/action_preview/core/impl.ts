@@ -1,8 +1,10 @@
 import { ApplicationAbstractStateAction } from "../../../z_vendor/getto-application/action/impl"
 
 import { loadCurrentDeliverySlip } from "../../load_slips/impl/core"
+import { printDeliverySlips } from "../../print_slips/impl/core"
 
 import { LoadDeliverySlipsInfra } from "../../load_slips/infra"
+import { PrintDeliverySlipsInfra } from "../../print_slips/infra"
 
 import {
     PreviewCoreMaterial,
@@ -13,7 +15,7 @@ import {
 
 import { LoadDeliverySlipsLocationDetecter } from "../../load_slips/method"
 
-export type PreviewCoreInfra = LoadDeliverySlipsInfra
+export type PreviewCoreInfra = LoadDeliverySlipsInfra & PrintDeliverySlipsInfra
 
 export function initPreviewCoreMaterial(
     infra: PreviewCoreInfra,
@@ -21,6 +23,7 @@ export function initPreviewCoreMaterial(
 ): PreviewCoreMaterial {
     return {
         load: loadCurrentDeliverySlip(infra)(detecter),
+        print: printDeliverySlips(infra),
     }
 }
 
@@ -40,5 +43,9 @@ class Action extends ApplicationAbstractStateAction<PreviewCoreState> implements
         this.igniteHook(() => {
             this.material.load(this.post)
         })
+    }
+
+    print(): void {
+        this.material.print(this.post)
     }
 }

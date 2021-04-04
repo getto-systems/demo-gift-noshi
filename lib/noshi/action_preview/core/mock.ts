@@ -8,4 +8,8 @@ export function mockLoadMenuCoreAction(): PreviewCoreAction {
 
 class Action extends ApplicationMockStateAction<PreviewCoreState> implements PreviewCoreAction {
     readonly initialState = initialPreviewCoreState
+
+    print(): void {
+        // mock では特に何もしない
+    }
 }

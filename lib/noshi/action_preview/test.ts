@@ -1,14 +1,20 @@
-import {
-    setupAsyncActionTestRunner,
-    setupSyncActionTestRunner,
-} from "../../z_vendor/getto-application/action/test_helper"
+import { setupAsyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
-import { mockPreviewResource } from "./mock"
+import { standard_DeliverySlips } from "../slip/test_helper"
+
+import { mockLoadDeliverySlipsLocationDetecter } from "../load_slips/impl/mock"
+
+import { initPreviewAction } from "./impl"
+import { initPreviewCoreAction, initPreviewCoreMaterial } from "./core/impl"
+import { initPreviewSlipsAction, initPreviewSlipsMaterial } from "./slips/impl"
 
 import {
     loadCurrentDeliverySlipEventHasDone,
     loadDeliverySlipsEventHasDone,
 } from "../load_slips/impl/core"
+import { printDeliverySlipsEventHasDone } from "../print_slips/impl/core"
+
+import { DeliverySlipSheet } from "../print_slips/infra"
 
 import { PreviewResource } from "./resource"
 
@@ -38,6 +44,7 @@ describe("Preview", () => {
                                             type: "御歳暮",
                                         },
                                         printState: "working",
+                                        href: "?number=0001",
                                     },
                                     {
                                         data: {
@@ -47,6 +54,7 @@ describe("Preview", () => {
                                             type: "内祝",
                                         },
                                         printState: "waiting",
+                                        href: "?number=0002",
                                     },
                                 ],
                             },
@@ -80,6 +88,7 @@ describe("Preview", () => {
                                             type: "御歳暮",
                                         },
                                         printState: "done",
+                                        href: "?number=0001",
                                     },
                                     {
                                         data: {
@@ -89,6 +98,7 @@ describe("Preview", () => {
                                             type: "内祝",
                                         },
                                         printState: "working",
+                                        href: "?number=0002",
                                     },
                                 ],
                             },
@@ -99,12 +109,6 @@ describe("Preview", () => {
 
             resource.preview.slips.subscriber.subscribe(runner(done))
         }))
-
-    test("next slip href", () => {
-        const { resource } = standard()
-
-        expect(resource.preview.slips.nextSlipHref()).toEqual({ hasNext: false })
-    })
 
     test("load slip", () =>
         new Promise<void>((done) => {
@@ -125,6 +129,7 @@ describe("Preview", () => {
                                     size: "A4",
                                     type: "御歳暮",
                                 },
+                                next: { hasNext: true, href: "?number=0002" },
                             },
                         ])
                     },
@@ -153,6 +158,7 @@ describe("Preview", () => {
                                     size: "A3",
                                     type: "内祝",
                                 },
+                                next: { hasNext: false },
                             },
                         ])
                     },
@@ -162,25 +168,27 @@ describe("Preview", () => {
             resource.preview.core.subscriber.subscribe(runner(done))
         }))
 
-    test("reset", () =>
+    test("print slips", () =>
         new Promise<void>((done) => {
             const { resource } = standard()
 
-            const runner = setupSyncActionTestRunner([
+            const runner = setupAsyncActionTestRunner(coreActionHasDone, [
                 {
                     statement: () => {
-                        resource.preview.form.reset()
+                        resource.preview.core.print()
                     },
                     examine: (stack) => {
-                        expect(stack).toEqual([""])
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-print",
+                                href: "object-url",
+                            },
+                        ])
                     },
                 },
             ])
 
-            const handler = runner(done)
-            resource.preview.form.noshiName.board.input.subscribeInputEvent(() =>
-                handler(resource.preview.form.noshiName.board.input.get()),
-            )
+            resource.preview.core.subscriber.subscribe(runner(done))
         }))
 })
 
@@ -196,7 +204,15 @@ function numbered() {
 }
 
 function initResource(url: URL): PreviewResource {
-    return mockPreviewResource(url)
+    const slips = standard_DeliverySlips()
+    const detecter = mockLoadDeliverySlipsLocationDetecter(url)
+    const sheet = standard_sheet()
+    return {
+        preview: initPreviewAction(
+            initPreviewCoreAction(initPreviewCoreMaterial({ slips, sheet }, detecter)),
+            initPreviewSlipsAction(initPreviewSlipsMaterial({ slips }, detecter)),
+        ),
+    }
 }
 
 function standard_URL(): URL {
@@ -206,10 +222,18 @@ function numbered_URL(): URL {
     return new URL("https://example.com/preview.html?number=0002")
 }
 
+function standard_sheet(): DeliverySlipSheet {
+    return async () => "object-url"
+}
+
 function coreActionHasDone(state: PreviewCoreState): boolean {
     switch (state.type) {
         case "initial-preview":
             return false
+
+        case "succeed-to-print":
+        case "failed-to-print":
+            return printDeliverySlipsEventHasDone(state)
 
         default:
             return loadCurrentDeliverySlipEventHasDone(state)

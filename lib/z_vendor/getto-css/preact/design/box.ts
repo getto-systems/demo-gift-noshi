@@ -71,7 +71,7 @@ function boxContent(boxClass: BoxClass, content: BoxContent): VNode {
     }
 }
 function boxTransparent(boxClass: BoxClass, content: VNodeContent): VNode {
-    return html`<article class="${mapBoxClass(boxClass)}">${content}</article>`
+    return html`<article class="box box_transparent ${mapBoxClass(boxClass)}">${content}</article>`
 }
 
 function boxHeader(title: VNodeContent) {

@@ -20,12 +20,12 @@ import {
 
 import { tableStructure } from "../../../z_vendor/getto-table/preact/cell/structure"
 import { tableCell } from "../../../z_vendor/getto-table/preact/cell/simple"
-import { tableClassName } from "../../../z_vendor/getto-table/preact/decorator"
+import { tableAlign, tableClassName } from "../../../z_vendor/getto-table/preact/decorator"
 import { visibleAll } from "../../../z_vendor/getto-table/preact/core"
 
 import { PreviewSlipsResource, PreviewSlipsResourceState } from "../resource"
 
-import { DeliverySlip } from "../../load_slips/data"
+import { DeliverySlip } from "../../slip/data"
 
 export function PreviewSlipsEntry(resource: PreviewSlipsResource): VNode {
     return h(PreviewSlipsComponent, {
@@ -78,6 +78,12 @@ function buildStructure() {
             header: linky,
             column: noshiName,
         })),
+
+        tableCell("link", (_key) => ({
+            label: "",
+            header: linky,
+            column: linkToSlip,
+        })).decorateColumn(tableAlign(["right"])),
     ])
         .decorateRow(tableClassName(["row_hover"]))
         .stickyHeader()
@@ -99,6 +105,9 @@ function buildStructure() {
             case "waiting":
                 return label_gray("未")
         }
+    }
+    function linkToSlip(slip: DeliverySlip): VNode {
+        return html`<a href="${slip.href}">選択</a>`
     }
 }
 
