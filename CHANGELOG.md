@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.4.0
+
+- fix: print button : See merge request getto-systems-base/projects/demo/gift-noshi!27
+
+
 ## Version : 0.3.1
 
 - update: theme : See merge request getto-systems-base/projects/demo/gift-noshi!25
