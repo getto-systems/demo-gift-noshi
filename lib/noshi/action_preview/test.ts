@@ -116,6 +116,7 @@ describe("Preview", () => {
                                     size: "A4",
                                     type: "御歳暮",
                                 },
+                                next: { hasNext: true, href: "?number=0002" },
                             },
                         ])
                     },
@@ -144,6 +145,7 @@ describe("Preview", () => {
                                     size: "A3",
                                     type: "内祝",
                                 },
+                                next: { hasNext: false },
                             },
                         ])
                     },
