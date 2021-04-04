@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.3.1
+
+- update: theme : See merge request getto-systems-base/projects/demo/gift-noshi!25
+
+
 ## Version : 0.3.0
 
 - fix: dashboard layout : See merge request getto-systems-base/projects/demo/gift-noshi!23
