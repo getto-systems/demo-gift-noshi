@@ -110,10 +110,8 @@ export function PreviewComponent(props: Props): VNode {
         return container(
             box({
                 title: "印刷用エクセル",
-                body: html`<ul>
-                    <li>${downloadLink()}</li>
-                    <li>${resetLink()}</li>
-                </ul>`,
+                body: downloadLink(),
+                footer: resetLink()
             }),
         )
 

@@ -13,7 +13,7 @@ export function standard_DeliverySlips(): DeliverySlipData[] {
             number: markDeliverySlipNumber("0002"),
             name: markNoshiName("山田花子"),
             size: "A3",
-            type: "内祝",
+            type: "内　祝",
         },
     ]
 }

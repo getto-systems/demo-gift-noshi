@@ -15,5 +15,5 @@ export type DeliverySlipData = Readonly<{
 }>
 
 export type DeliverySlipNumber = string & { DeliverySlipNumber: never }
-export type DeliverySlipType = "御歳暮" | "内祝"
+export type DeliverySlipType = "御歳暮" | "内　祝"
 export type DeliverySlipSize = "A3" | "A4"
