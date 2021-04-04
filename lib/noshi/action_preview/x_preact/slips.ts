@@ -25,8 +25,7 @@ import { visibleAll } from "../../../z_vendor/getto-table/preact/core"
 
 import { PreviewSlipsResource, PreviewSlipsResourceState } from "../resource"
 
-import { DeliverySlip } from "../../load_slips/data"
-import { deliverySlipHrefConverter } from "../../load_slips/impl/converter"
+import { DeliverySlip } from "../../slip/data"
 
 export function PreviewSlipsEntry(resource: PreviewSlipsResource): VNode {
     return h(PreviewSlipsComponent, {
@@ -108,7 +107,7 @@ function buildStructure() {
         }
     }
     function linkToSlip(slip: DeliverySlip): VNode {
-        return html`<a href="${deliverySlipHrefConverter(slip.data)}">選択</a>`
+        return html`<a href="${slip.href}">選択</a>`
     }
 }
 

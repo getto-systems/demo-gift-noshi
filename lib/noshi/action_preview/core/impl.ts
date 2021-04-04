@@ -1,8 +1,10 @@
 import { ApplicationAbstractStateAction } from "../../../z_vendor/getto-application/action/impl"
 
 import { loadCurrentDeliverySlip } from "../../load_slips/impl/core"
+import { printDeliverySlips } from "../../print_slips/impl/core"
 
 import { LoadDeliverySlipsInfra } from "../../load_slips/infra"
+import { PrintDeliverySlipsInfra } from "../../print_slips/infra"
 
 import {
     PreviewCoreMaterial,
@@ -13,9 +15,7 @@ import {
 
 import { LoadDeliverySlipsLocationDetecter } from "../../load_slips/method"
 
-import { Workbook } from "exceljs"
-
-export type PreviewCoreInfra = LoadDeliverySlipsInfra
+export type PreviewCoreInfra = LoadDeliverySlipsInfra & PrintDeliverySlipsInfra
 
 export function initPreviewCoreMaterial(
     infra: PreviewCoreInfra,
@@ -23,6 +23,7 @@ export function initPreviewCoreMaterial(
 ): PreviewCoreMaterial {
     return {
         load: loadCurrentDeliverySlip(infra)(detecter),
+        print: printDeliverySlips(infra),
     }
 }
 
@@ -45,16 +46,6 @@ class Action extends ApplicationAbstractStateAction<PreviewCoreState> implements
     }
 
     print(): void {
-        const workbook = new Workbook()
-        workbook.addWorksheet("my sheet")
-        const result = workbook.xlsx.writeBuffer()
-        result.then((buffer) => {
-            const href = URL.createObjectURL(
-                new Blob([buffer], {
-                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                }),
-            )
-            this.post({ type: "succeed-to-print", href })
-        })
+        this.material.print(this.post)
     }
 }

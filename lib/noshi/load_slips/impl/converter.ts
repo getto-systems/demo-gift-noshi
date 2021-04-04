@@ -1,5 +1,5 @@
 import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/data"
-import { DeliverySlipData, DeliverySlipNumber } from "../data"
+import { DeliverySlipData, DeliverySlipNumber } from "../../slip/data"
 
 const SEARCH_KEY = {
     number: "number",

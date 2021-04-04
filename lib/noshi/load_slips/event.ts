@@ -1,9 +1,5 @@
-import {
-    DeliverySlip,
-    DeliverySlipData,
-    LoadCurrentDeliverySlipError,
-    NextDeliverySlipHref,
-} from "./data"
+import { DeliverySlip, DeliverySlipData } from "../slip/data"
+import { LoadCurrentDeliverySlipError, NextDeliverySlipHref } from "./data"
 
 export type LoadDeliverySlipsEvent = Readonly<{ type: "succeed-to-load"; slips: DeliverySlip[] }>
 export type LoadCurrentDeliverySlipEvent =

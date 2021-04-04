@@ -9,11 +9,9 @@ import { box, container_top } from "../../../z_vendor/getto-css/preact/design/bo
 
 import { PreviewResource, PreviewResourceState } from "../resource"
 
-import {
-    DeliverySlipData,
-    LoadCurrentDeliverySlipError,
-    NextDeliverySlipHref,
-} from "../../load_slips/data"
+import { DeliverySlipData } from "../../slip/data"
+import { LoadCurrentDeliverySlipError, NextDeliverySlipHref } from "../../load_slips/data"
+import { PrintDeliverySlipsError } from "../../print_slips/data"
 
 export function PreviewEntry(resource: PreviewResource): VNode {
     return h(PreviewComponent, {
@@ -28,17 +26,22 @@ export function PreviewComponent(props: Props): VNode {
         case "initial-preview":
             return EMPTY_CONTENT
 
-        case "failed-to-load":
-            return box({
-                title: "ロードエラー",
-                body: notice_alert(loadError(props.state.err)),
-            })
-
         case "succeed-to-load":
             return preview(props.state.slip, props.state.next)
 
         case "succeed-to-print":
             return html`<a href="${props.state.href}" download="ダウンロード.xlsx">ダウンロード</a>`
+
+        case "failed-to-load":
+            return box({
+                title: "ロードエラー",
+                body: notice_alert(loadError(props.state.err)),
+            })
+        case "failed-to-print":
+            return box({
+                title: "印刷エラー",
+                body: notice_alert(printError(props.state.err)),
+            })
     }
 
     function preview(slip: DeliverySlipData, nextSlip: NextDeliverySlipHref): VNode {
@@ -96,6 +99,12 @@ function loadError(err: LoadCurrentDeliverySlipError): string {
 
         case "not-found":
             return "伝票データのリンクが切れています"
+    }
+}
+function printError(err: PrintDeliverySlipsError): string {
+    switch (err.type) {
+        case "infra-error":
+            return `詳細: ${err.err}`
     }
 }
 

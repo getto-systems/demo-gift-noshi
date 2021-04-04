@@ -1,7 +1,8 @@
+import { LocationTypes } from "../../z_vendor/getto-application/location/infra"
+
 import { LoadCurrentDeliverySlipEvent, LoadDeliverySlipsEvent } from "./event"
 
-import { DeliverySlipNumber } from "./data"
-import { LocationTypes } from "../../z_vendor/getto-application/location/infra"
+import { DeliverySlipNumber } from "../slip/data"
 
 export interface LoadDeliverySlipsPod {
     (detecter: LoadDeliverySlipsLocationDetecter): LoadDeliverySlipsMethod

@@ -10,12 +10,8 @@ import {
 
 import { LoadCurrentDeliverySlipEvent, LoadDeliverySlipsEvent } from "../event"
 
-import {
-    DeliverySlip,
-    DeliverySlipData,
-    DeliverySlipPrintState,
-    NextDeliverySlipHref,
-} from "../data"
+import { DeliverySlip, DeliverySlipData, DeliverySlipPrintState } from "../../slip/data"
+import { NextDeliverySlipHref } from "../data"
 
 interface Detecter {
     (): LoadDeliverySlipsLocationDetectMethod
@@ -37,6 +33,7 @@ export const loadDeliverySlips: LoadSlips = (infra) => (detecter) => async (post
                 (data, index): DeliverySlip => ({
                     data,
                     printState: index === 0 ? "working" : "waiting",
+                    href: deliverySlipHrefConverter(data),
                 }),
             ),
         })
@@ -49,7 +46,11 @@ export const loadDeliverySlips: LoadSlips = (infra) => (detecter) => async (post
         type: "succeed-to-load",
         slips: slips.reduce(
             (acc, data) => {
-                acc.slips.push({ data, printState: printState() })
+                acc.slips.push({
+                    data,
+                    printState: printState(),
+                    href: deliverySlipHrefConverter(data),
+                })
                 acc.hasMatched = acc.hasMatched || isMatched()
                 return acc
 
