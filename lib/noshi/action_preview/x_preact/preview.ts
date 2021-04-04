@@ -4,7 +4,12 @@ import { html } from "htm/preact"
 import { useApplicationAction } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
-import { buttons, button_send, field } from "../../../z_vendor/getto-css/preact/design/form"
+import {
+    buttons,
+    button_complete,
+    button_send,
+    field,
+} from "../../../z_vendor/getto-css/preact/design/form"
 import { box, container, container_top } from "../../../z_vendor/getto-css/preact/design/box"
 
 import { PreviewResource, PreviewResourceState } from "../resource"
@@ -100,7 +105,7 @@ export function PreviewComponent(props: Props): VNode {
             if (nextSlip.hasNext) {
                 return button_send({ label: "次へ", state: "confirm", onClick })
             } else {
-                return button_send({ label: "印刷", state: "confirm", onClick })
+                return button_complete({ label: "印刷", state: "confirm", onClick })
             }
 
             function onClick(e: Event) {
