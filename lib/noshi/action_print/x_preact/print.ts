@@ -38,14 +38,17 @@ export function PrintEntry(view: PrintView): VNode {
 
     return h(PrintComponent, resource)
 }
+
+const pageTitle = "印刷" as const
+
 export function PrintComponent(resource: PrintResource): VNode {
-    useDocumentTitle("印刷")
+    useDocumentTitle(pageTitle)
 
     return appLayout({
         siteInfo,
         header: [h(LoadSeasonComponent, resource)],
         main: appMain({
-            header: mainHeader([mainTitle("印刷"), h(LoadBreadcrumbListComponent, resource)]),
+            header: mainHeader([mainTitle(pageTitle), h(LoadBreadcrumbListComponent, resource)]),
             body: mainBody(h(PreviewEntry, resource)),
             copyright,
         }),
