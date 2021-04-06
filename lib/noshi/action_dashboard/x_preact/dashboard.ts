@@ -35,14 +35,17 @@ export function DashboardEntry(view: DashboardView): VNode {
 
     return h(DashboardComponent, resource)
 }
+
+const pageTitle = "ホーム" as const
+
 export function DashboardComponent(resource: DashboardResource): VNode {
-    useDocumentTitle("ホーム")
+    useDocumentTitle(pageTitle)
 
     return appLayout({
         siteInfo,
         header: [h(LoadSeasonComponent, resource)],
         main: appMain({
-            header: mainHeader([mainTitle("ホーム"), h(LoadBreadcrumbListComponent, resource)]),
+            header: mainHeader([mainTitle(pageTitle), h(LoadBreadcrumbListComponent, resource)]),
             body: mainBody(h(ExampleComponent, resource)),
             copyright,
         }),

@@ -29,9 +29,11 @@ export function NotFoundEntry(view: NotFoundView): VNode {
     return h(NotFoundComponent, resource)
 }
 
+const pageTitle = "Not Found" as const
+
 type Props = NotFoundResource
 export function NotFoundComponent(props: Props): VNode {
-    useDocumentTitle("Not Found")
+    useDocumentTitle(pageTitle)
 
     return loginBox(siteInfo, {
         title: "リンクが切れていました",
