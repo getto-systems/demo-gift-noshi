@@ -34,7 +34,7 @@ type Props = LoadMenuResource & LoadMenuResourceState
 export function LoadMenuComponent(props: Props): VNode {
     switch (props.state.type) {
         case "initial-menu":
-            return menu([])
+            return menu([EMPTY_CONTENT])
 
         case "succeed-to-load":
         case "succeed-to-update":
