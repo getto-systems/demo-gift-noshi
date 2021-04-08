@@ -8,25 +8,22 @@ import { initLoadMenuCoreAction, initLoadMenuCoreMaterial } from "./core/impl"
 import { MenuContent } from "../kernel/infra"
 
 import { LoadMenuResource } from "./resource"
+import { LocationOutsideFeature } from "../../z_vendor/getto-application/location/infra"
+import { RepositoryOutsideFeature } from "../../z_vendor/getto-application/infra/repository/infra"
 
-type OutsideFeature = Readonly<{
-    webStorage: Storage
-    currentLocation: Location
-}>
 export function newLoadMenuResource(
-    feature: OutsideFeature,
+    feature: RepositoryOutsideFeature & LocationOutsideFeature,
     menuContent: MenuContent,
 ): LoadMenuResource {
-    const { webStorage, currentLocation } = feature
     return {
         menu: initLoadMenuCoreAction(
             initLoadMenuCoreMaterial(
                 {
-                    ...newLoadMenuInfra(webStorage, menuContent),
+                    ...newLoadMenuInfra(feature, menuContent),
                     ...newUpdateMenuBadgeInfra(menuContent),
-                    ...newToggleMenuExpandInfra(webStorage, menuContent),
+                    ...newToggleMenuExpandInfra(feature, menuContent),
                 },
-                newLoadMenuLocationDetecter(currentLocation),
+                newLoadMenuLocationDetecter(feature),
             ),
         ),
     }

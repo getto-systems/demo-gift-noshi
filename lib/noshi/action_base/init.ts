@@ -4,11 +4,10 @@ import { newLoadMenuResource } from "../../outline/action_load_menu/init"
 import { newLoadSeasonResource } from "../common/action_load_season/init"
 
 import { BaseResource } from "./resource"
+import { RepositoryOutsideFeature } from "../../z_vendor/getto-application/infra/repository/infra"
+import { LocationOutsideFeature } from "../../z_vendor/getto-application/location/infra"
 
-export type BaseOutsideFeature = Readonly<{
-    webStorage: Storage
-    currentLocation: Location
-}>
+export type BaseOutsideFeature = LocationOutsideFeature & RepositoryOutsideFeature
 export function newBaseResource(feature: BaseOutsideFeature): BaseResource {
     const menu = homeMenuContent()
     return {

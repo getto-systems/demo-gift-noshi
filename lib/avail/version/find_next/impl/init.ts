@@ -9,11 +9,12 @@ import { detectApplicationTargetPath } from "./core"
 import { FindNextVersionInfra } from "../infra"
 
 import { FindNextVersionLocationDetecter } from "../method"
+import { LocationOutsideFeature } from "../../../../z_vendor/getto-application/location/infra"
 
 export function newFindNextVersionLocationDetecter(
-    currentLocation: Location,
+    feature: LocationOutsideFeature,
 ): FindNextVersionLocationDetecter {
-    return newLocationDetecter(currentLocation, detectApplicationTargetPath({ version: env.version }))
+    return newLocationDetecter(feature, detectApplicationTargetPath({ version: env.version }))
 }
 
 export function newFindNextVersionInfra(): FindNextVersionInfra {

@@ -15,12 +15,13 @@ import { useDocumentTitle } from "../../../x_preact/hooks"
 import { copyright, siteInfo } from "../../site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
-import { LoadSeasonComponent } from "../../common/action_load_season/x_preact/load_season"
+import { LoadSeasonEntry } from "../../common/action_load_season/x_preact/load_season"
 import { LoadMenuEntry } from "../../../outline/action_load_menu/x_preact/load_menu"
 import { LoadBreadcrumbListComponent } from "../../../outline/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
-import { ExampleComponent } from "../../common/action_load_season/x_preact/example"
+import { LoadSeasonFieldEntry } from "../../common/action_load_season/x_preact/load_season_field"
 
 import { DashboardView, DashboardResource } from "../resource"
+import { box_double, container } from "../../../z_vendor/getto-css/preact/design/box"
 
 export function DashboardEntry(view: DashboardView): VNode {
     const resource = useApplicationView(view)
@@ -43,12 +44,21 @@ export function DashboardComponent(resource: DashboardResource): VNode {
 
     return appLayout({
         siteInfo,
-        header: [h(LoadSeasonComponent, resource)],
+        header: [h(LoadSeasonEntry, resource)],
         main: appMain({
             header: mainHeader([mainTitle(pageTitle), h(LoadBreadcrumbListComponent, resource)]),
-            body: mainBody(h(ExampleComponent, resource)),
+            body: mainBody(h(NoshiComponent, resource)),
             copyright,
         }),
         menu: h(LoadMenuEntry, resource),
     })
+}
+
+function NoshiComponent(resource: DashboardResource): VNode {
+    return container([
+        box_double({
+            title: "のし印刷",
+            body: h(LoadSeasonFieldEntry, resource),
+        }),
+    ])
 }

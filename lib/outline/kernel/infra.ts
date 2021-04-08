@@ -4,6 +4,7 @@ import { RepositoryPod } from "../../z_vendor/getto-application/infra/repository
 import { GetMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
 export type MenuContent = Readonly<{
+    database: string
     key: string
     menuTree: MenuTree
 }>

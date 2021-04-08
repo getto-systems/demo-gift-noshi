@@ -50,7 +50,9 @@ export type TableDataStyleDecorator =
     | TableDataStyleDecorator_align
     | TableDataStyleDecorator_className
 
-export type TableDataRowStyleDecorator = TableDataStyleDecorator_none | TableDataStyleDecorator_className
+export type TableDataRowStyleDecorator =
+    | TableDataStyleDecorator_none
+    | TableDataStyleDecorator_className
 
 type TableDataStyleDecorator_none = Readonly<{ type: "none" }>
 type TableDataStyleDecorator_border = Readonly<{
@@ -63,16 +65,12 @@ type TableDataStyleDecorator_align = Readonly<{
 }>
 type TableDataStyleDecorator_className = Readonly<{
     type: "className"
-    provider: TableDataClassNameProvider
+    className: TableDataClassName
 }>
-
-interface TableDataClassNameProvider {
-    (): TableDataClassName
-}
 
 export function decorateStyle(
     style: TableDataStyle,
-    decorator: TableDataStyleDecorator
+    decorator: TableDataStyleDecorator,
 ): TableDataStyle {
     switch (decorator.type) {
         case "none":
@@ -88,25 +86,25 @@ export function decorateStyle(
             return { ...style, align: decorator.decorator(style.align) }
 
         case "className":
-            return { ...style, className: [...style.className, ...decorator.provider()] }
+            return { ...style, className: [...style.className, ...decorator.className] }
     }
 }
 export function decorateRowStyle(
     style: TableDataRowStyle,
-    decorator: TableDataRowStyleDecorator
+    decorator: TableDataRowStyleDecorator,
 ): TableDataRowStyle {
     switch (decorator.type) {
         case "none":
             return style
 
         case "className":
-            return { ...style, className: [...style.className, ...decorator.provider()] }
+            return { ...style, className: [...style.className, ...decorator.className] }
     }
 }
 
 export function decorateContent(
     content: VNodeContent,
-    decorator: TableDataContentDecoratorProvider
+    decorator: TableDataContentDecoratorProvider,
 ): VNodeContent {
     switch (decorator.type) {
         case "none":
@@ -119,14 +117,16 @@ export function decorateContent(
 
 export const decorateNone: TableDataStyleDecorator_none = { type: "none" }
 
-export function horizontalBorder(borders: TableDataHorizontalBorder[]): TableDataStyleDecorator_border {
+export function horizontalBorder(
+    borders: TableDataHorizontalBorder[],
+): TableDataStyleDecorator_border {
     return { type: "border", decorator: decorateHorizontalBorder(borders) }
 }
 export function tableAlign(aligns: TableDataAlign[]): TableDataStyleDecorator_align {
     return { type: "align", decorator: decorateAlign(aligns) }
 }
 export function tableClassName(className: TableDataClassName): TableDataStyleDecorator_className {
-    return { type: "className", provider: () => className }
+    return { type: "className", className }
 }
 
 interface Decorator<T> {

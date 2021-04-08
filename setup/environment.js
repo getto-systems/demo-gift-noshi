@@ -23,12 +23,9 @@ function envContent() {
         version,
         isProduction,
 
-        storageKey: {
+        database: {
             season: "GIFT-NOSHI-SEASON",
-            menuExpand: {
-                home: "GIFT-NOSHI-MENU-EXPAND-HOME",
-                docs: "GIFT-NOSHI-MENU-EXPAND-DOCS",
-            },
+            menuExpand: "GIFT-NOSHI-MENU-EXPAND",
         },
     }
 

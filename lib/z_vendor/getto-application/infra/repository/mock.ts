@@ -1,19 +1,25 @@
-import { DB, FetchDBResult } from "./infra"
+import {
+    FetchRepositoryResult,
+    Repository,
+    StoreRepositoryResult,
+} from "./infra"
 
-export function mockDB<T>(): DB<T> {
-    return new Memory()
+export function mockRepository<T>(): Repository<T> {
+    return new DB()
 }
 
-class Memory<T> implements DB<T> {
-    store: FetchDBResult<T> = { found: false }
+class DB<T> implements Repository<T> {
+    store: FetchRepositoryResult<T> = { success: true, found: false }
 
-    get(): FetchDBResult<T> {
+    async get(): Promise<FetchRepositoryResult<T>> {
         return this.store
     }
-    set(value: T): void {
-        this.store = { found: true, value }
+    async set(value: T): Promise<StoreRepositoryResult> {
+        this.store = { success: true, found: true, value }
+        return { success: true }
     }
-    remove(): void {
-        this.store = { found: false }
+    async remove(): Promise<StoreRepositoryResult> {
+        this.store = { success: true, found: false }
+        return { success: true }
     }
 }

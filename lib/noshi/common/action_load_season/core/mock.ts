@@ -1,9 +1,11 @@
-import { LoadSeasonCoreAction } from "./action"
+import { ApplicationMockStateAction } from "../../../../z_vendor/getto-application/action/mock"
 
-import { LoadSeasonResult } from "../../load_season/data"
+import { initialLoadSeasonCoreState, LoadSeasonCoreAction, LoadSeasonCoreState } from "./action"
 
-export function mockLoadSeasonCoreAction(result: LoadSeasonResult): LoadSeasonCoreAction {
-    return {
-        load: () => result,
-    }
+export function mockLoadSeasonCoreAction(): LoadSeasonCoreAction {
+    return new Action()
+}
+
+class Action extends ApplicationMockStateAction<LoadSeasonCoreState> {
+    initialState = initialLoadSeasonCoreState
 }

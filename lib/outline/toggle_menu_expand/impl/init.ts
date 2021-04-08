@@ -1,17 +1,18 @@
 import { env } from "../../../y_environment/env"
 
-import { newMenuExpandRepository } from "../../kernel/infra/repository/menu_expand"
+import { newMenuExpandRepositoryPod } from "../../kernel/infra/repository/menu_expand"
 
 import { MenuContent } from "../../kernel/infra"
 import { ToggleMenuExpandInfra } from "../infra"
+import { RepositoryOutsideFeature } from "../../../z_vendor/getto-application/infra/repository/infra"
 
 export function newToggleMenuExpandInfra(
-    webStorage: Storage,
+    feature: RepositoryOutsideFeature,
     menuContent: MenuContent,
 ): ToggleMenuExpandInfra {
     return {
         version: env.version,
         menuTree: menuContent.menuTree,
-        menuExpand: newMenuExpandRepository(webStorage, menuContent.key),
+        menuExpand: newMenuExpandRepositoryPod(feature, menuContent),
     }
 }
