@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version : 0.5.0
+
+- apply: example : See merge request getto-systems-base/projects/demo/gift-noshi!32
+- rename: z_details : See merge request getto-systems-base/projects/demo/gift-noshi!31
+- fix: page title : See merge request getto-systems-base/projects/demo/gift-noshi!30
+- fix: page title : See merge request getto-systems-base/projects/demo/gift-noshi!29
+
+
 ## Version : 0.4.0
 
 - fix: print button : See merge request getto-systems-base/projects/demo/gift-noshi!27
