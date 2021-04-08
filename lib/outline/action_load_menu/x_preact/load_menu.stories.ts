@@ -11,7 +11,7 @@ import {
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
 import { copyright, siteInfo } from "../../../noshi/site"
-import { lniClass, lnir } from "../../../z_external/icon/line_icon"
+import { lniClass, lnir } from "../../../z_details/icon/line_icon"
 
 import { LoadMenuComponent } from "./load_menu"
 
