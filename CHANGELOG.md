@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.9.0
+
+- fix: bland : See merge request getto-systems-base/projects/demo/gift-noshi!40
+
+
 ## Version : 0.8.0
 
 - fix: menu : See merge request getto-systems-base/projects/demo/gift-noshi!38
