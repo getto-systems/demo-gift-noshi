@@ -5,7 +5,7 @@ export type SiteInfo = Readonly<{
 }>
 
 export const siteInfo: SiteInfo = {
-    brand: "GETTO",
+    brand: "ギフト",
     title: "のし印刷",
     subTitle: "プレビュー",
 }
