@@ -1,5 +1,9 @@
 import { ConvertLocationResult } from "./data"
 
+export type LocationOutsideFeature = Readonly<{
+    currentLocation: Location
+}>
+
 export type LocationTypes<T> = {
     detecter: LocationDetecter<T>
     method: LocationDetectMethod<T>

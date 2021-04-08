@@ -2,19 +2,20 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../z_vendor/storybook/preact/story"
 
-import { ExampleComponent } from "./example"
+import { LoadSeasonFieldComponent } from "./load_season_field"
 
 import { markSeason } from "../../load_season/impl/test_helper"
 
-import { mockLoadSeasonCoreAction } from "../core/mock"
+import { mockLoadSeasonResource } from "../mock"
 
-import { LoadSeasonResult } from "../../load_season/data"
+import { LoadSeasonCoreState } from "../core/action"
 
 enum LoadEnum {
     "success",
     "error",
 }
-enum PeriodEnum {
+
+enum SeasonPeriodEnum {
     "summer",
     "winter",
 }
@@ -26,7 +27,7 @@ export default {
             control: { type: "select", options: enumKeys(LoadEnum) },
         },
         period: {
-            control: { type: "select", options: enumKeys(PeriodEnum) },
+            control: { type: "select", options: enumKeys(SeasonPeriodEnum) },
         },
     },
 }
@@ -34,22 +35,22 @@ export default {
 type MockProps = Readonly<{
     load: keyof typeof LoadEnum
     year: number
-    period: keyof typeof PeriodEnum
+    period: keyof typeof SeasonPeriodEnum
     err: string
 }>
 const template = storyTemplate<MockProps>((props) => {
-    return h(ExampleComponent, { season: mockLoadSeasonCoreAction(season()) })
+    return h(LoadSeasonFieldComponent, { ...mockLoadSeasonResource(), state: state() })
 
-    function season(): LoadSeasonResult {
+    function state(): LoadSeasonCoreState {
         switch (props.load) {
             case "success":
                 return {
-                    success: true,
+                    type: "succeed-to-load",
                     value: markSeason({ year: props.year, period: props.period }),
                 }
 
             case "error":
-                return { success: false, err: { type: "infra-error", err: props.err } }
+                return { type: "failed-to-load", err: { type: "infra-error", err: props.err } }
         }
     }
 })

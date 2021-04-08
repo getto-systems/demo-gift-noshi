@@ -1,37 +1,25 @@
-import { RemoteCommonError, RemoteInfraError } from "./data"
-import { Remote, RemoteFeature, RemotePod, RemoteResult } from "./infra"
+import { RemoteCommonError } from "./data"
+import { Remote, RemoteFeature, RemoteOutsideFeature, RemotePod } from "./infra"
 
-export function remoteFeature(serverURL: string, webCrypto: Crypto): RemoteFeature {
+export function remoteFeature(
+    serverURL: string,
+    { webCrypto }: RemoteOutsideFeature,
+): RemoteFeature {
     return {
         serverURL,
         nonce: () => webCrypto.getRandomValues(new Uint32Array(4)).join("-"),
     }
 }
 
-export function wrapRemote<M, V, R, E_raw, E_unknown>(
+export function convertRemote<M, V, R, E_raw, E_unknown>(
     remote: Remote<M, R, E_raw>,
-    errorHandler: { (err: unknown): E_unknown },
 ): RemotePod<M, V, R, E_raw | E_unknown> {
     return (converter) => async (message) => {
-        const result = await access(message)
+        const result = await remote(message)
         if (!result.success) {
             return result
         }
         return { success: true, value: converter(result.value) }
-    }
-
-    async function access(message: M): Promise<RemoteResult<R, E_raw | E_unknown>> {
-        try {
-            return await remote(message)
-        } catch (err) {
-            return { success: false, err: errorHandler(err) }
-        }
-    }
-}
-export function remoteInfraError(err: unknown): RemoteInfraError {
-    return {
-        type: "infra-error",
-        err: `${err}`,
     }
 }
 

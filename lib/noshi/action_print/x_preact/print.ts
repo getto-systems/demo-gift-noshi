@@ -17,7 +17,7 @@ import { useDocumentTitle } from "../../../x_preact/hooks"
 import { copyright, siteInfo } from "../../site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
-import { LoadSeasonComponent } from "../../common/action_load_season/x_preact/load_season"
+import { LoadSeasonEntry } from "../../common/action_load_season/x_preact/load_season"
 import { LoadMenuEntry } from "../../../outline/action_load_menu/x_preact/load_menu"
 import { LoadBreadcrumbListComponent } from "../../../outline/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
 import { PreviewEntry } from "../../action_preview/x_preact/preview"
@@ -46,7 +46,7 @@ export function PrintComponent(resource: PrintResource): VNode {
 
     return appLayout({
         siteInfo,
-        header: [h(LoadSeasonComponent, resource)],
+        header: [h(LoadSeasonEntry, resource)],
         main: appMain({
             header: mainHeader([mainTitle(pageTitle), h(LoadBreadcrumbListComponent, resource)]),
             body: mainBody(h(PreviewEntry, resource)),

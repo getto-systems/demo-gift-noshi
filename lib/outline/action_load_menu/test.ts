@@ -5,9 +5,9 @@ import {
 
 import { markMenuCategoryLabel, standard_MenuTree } from "../kernel/impl/test_helper"
 
-import { wrapRepository } from "../../z_vendor/getto-application/infra/repository/helper"
+import { convertRepository } from "../../z_vendor/getto-application/infra/repository/helper"
 import { mockRemotePod } from "../../z_vendor/getto-application/infra/remote/mock"
-import { mockDB } from "../../z_vendor/getto-application/infra/repository/mock"
+import { mockRepository } from "../../z_vendor/getto-application/infra/repository/mock"
 
 import { mockLoadMenuLocationDetecter } from "../kernel/impl/mock"
 
@@ -18,7 +18,11 @@ import { loadMenuEventHasDone } from "../load_menu/impl/core"
 import { updateMenuBadgeEventHasDone } from "../update_menu_badge/impl/core"
 import { toggleMenuExpandEventHasDone } from "../toggle_menu_expand/impl/core"
 
-import { GetMenuBadgeRemotePod, MenuExpandRepositoryPod } from "../kernel/infra"
+import {
+    GetMenuBadgeRemotePod,
+    MenuExpandRepositoryPod,
+    MenuExpandRepositoryValue,
+} from "../kernel/infra"
 
 import { LoadMenuResource } from "./resource"
 import { LoadMenuCoreState } from "./core/action"
@@ -169,7 +173,7 @@ describe("Menu", () => {
                             markMenuCategoryLabel("DETAIL"),
                         ])
                     },
-                    examine: (stack) => {
+                    examine: async (stack) => {
                         expect(stack).toEqual([
                             {
                                 type: "succeed-to-toggle",
@@ -188,7 +192,7 @@ describe("Menu", () => {
                             },
                         ])
 
-                        const result = menuExpand.get()
+                        const result = await menuExpand.get()
                         if (!result.success) {
                             throw new Error("menu expand get failed")
                         }
@@ -205,7 +209,7 @@ describe("Menu", () => {
                             markMenuCategoryLabel("DETAIL"),
                         ])
                     },
-                    examine: (stack) => {
+                    examine: async (stack) => {
                         expect(stack).toEqual([
                             {
                                 type: "succeed-to-toggle",
@@ -224,7 +228,7 @@ describe("Menu", () => {
                             },
                         ])
 
-                        const result = menuExpand.get()
+                        const result = await menuExpand.get()
                         if (!result.success) {
                             throw new Error("menu expand get failed")
                         }
@@ -369,12 +373,12 @@ function standard_version(): string {
 }
 
 function empty_menuExpand(): MenuExpandRepositoryPod {
-    return wrapRepository(mockDB())
+    return convertRepository(mockRepository<MenuExpandRepositoryValue>())
 }
 function expand_menuExpand(): MenuExpandRepositoryPod {
-    const menuExpand = mockDB()
+    const menuExpand = mockRepository<MenuExpandRepositoryValue>()
     menuExpand.set([[markMenuCategoryLabel("DOCUMENT")]])
-    return wrapRepository(menuExpand)
+    return convertRepository(menuExpand)
 }
 
 function standard_getMenuBadge(): GetMenuBadgeRemotePod {

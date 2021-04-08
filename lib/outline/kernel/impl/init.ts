@@ -5,7 +5,10 @@ import { newLocationDetecter } from "../../../z_vendor/getto-application/locatio
 import { detectMenuTargetPath } from "./detecter"
 
 import { LoadMenuLocationDetecter } from "../method"
+import { LocationOutsideFeature } from "../../../z_vendor/getto-application/location/infra"
 
-export function newLoadMenuLocationDetecter(currentLocation: Location): LoadMenuLocationDetecter {
-    return newLocationDetecter(currentLocation, detectMenuTargetPath({ version: env.version }))
+export function newLoadMenuLocationDetecter(
+    feature: LocationOutsideFeature,
+): LoadMenuLocationDetecter {
+    return newLocationDetecter(feature, detectMenuTargetPath({ version: env.version }))
 }

@@ -6,20 +6,17 @@ import { initLoadBreadcrumbListCoreAction, initLoadBreadcrumbListCoreMaterial } 
 import { MenuContent } from "../kernel/infra"
 
 import { LoadBreadcrumbListResource } from "./resource"
+import { LocationOutsideFeature } from "../../z_vendor/getto-application/location/infra"
 
-type OutsideFeature = Readonly<{
-    currentLocation: Location
-}>
 export function newLoadBreadcrumbListResource(
-    feature: OutsideFeature,
+    feature: LocationOutsideFeature,
     menuContent: MenuContent,
 ): LoadBreadcrumbListResource {
-    const { currentLocation } = feature
     return {
         breadcrumbList: initLoadBreadcrumbListCoreAction(
             initLoadBreadcrumbListCoreMaterial(
                 newLoadBreadcrumbListInfra(menuContent),
-                newLoadMenuLocationDetecter(currentLocation),
+                newLoadMenuLocationDetecter(feature),
             ),
         ),
     }

@@ -21,7 +21,7 @@ interface ModifyExpand {
     (expand: MenuExpand, path: MenuCategoryPath): void
 }
 function modifyMenuExpand(modify: ModifyExpand): Toggle {
-    return (infra, store) => (detecter) => (path, post) => {
+    return (infra, store) => (detecter) => async (path, post) => {
         const menuExpand = infra.menuExpand(menuExpandRepositoryConverter)
 
         const fetchMenuExpandResult = store.menuExpand.get()
@@ -29,7 +29,7 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
 
         modify(expand, path)
 
-        const storeResult = menuExpand.set(expand)
+        const storeResult = await menuExpand.set(expand)
         if (!storeResult.success) {
             post({ type: "repository-error", err: storeResult.err })
             return
