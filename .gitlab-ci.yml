@@ -25,6 +25,7 @@ test:
     - npm clean-install
   script:
     - npm test
+    - npm run build
 
 bump_version:
   stage: bump_version
