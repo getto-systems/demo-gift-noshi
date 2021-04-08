@@ -1,4 +1,4 @@
-import { newApi_CheckDeployExists } from "../../../../../z_external/api/avail/check_deploy_exists"
+import { newApi_CheckDeployExists } from "../../../../../z_details/api/avail/check_deploy_exists"
 
 import {
     remoteInfraError,

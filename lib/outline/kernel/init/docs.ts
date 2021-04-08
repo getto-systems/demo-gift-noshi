@@ -1,6 +1,6 @@
 import { env } from "../../../y_environment/env"
 
-import { lnir } from "../../../z_external/icon/line_icon"
+import { lnir } from "../../../z_details/icon/line_icon"
 
 import { category, item } from "./common"
 

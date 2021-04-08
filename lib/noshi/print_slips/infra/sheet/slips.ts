@@ -1,4 +1,4 @@
-import { newSheet_deliverySlips } from "../../../../z_external/sheet/slips"
+import { newSheet_deliverySlips } from "../../../../z_details/sheet/slips"
 
 import { DeliverySlipSheet } from "../../infra"
 

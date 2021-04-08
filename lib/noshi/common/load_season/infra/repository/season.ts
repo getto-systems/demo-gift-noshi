@@ -1,7 +1,7 @@
 import { env } from "../../../../../y_environment/env"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
-import { newDB_Season } from "../../../../../z_external/db/example/season"
+import { newDB_Season } from "../../../../../z_details/db/example/season"
 
 import { SeasonRepositoryPod } from "../../infra"
 
