@@ -67,6 +67,8 @@ export function newSheet_deliverySlips(): PrintSlips {
 
         sheet.pageSetup.orientation = "landscape"
         sheet.pageSetup.paperSize = PaperSize.A4
+        sheet.pageSetup.horizontalDpi = 600
+        sheet.pageSetup.verticalDpi = 600
         sheet.pageSetup.horizontalCentered = true
         sheet.pageSetup.margins = {
             top: 0.25,
@@ -114,6 +116,8 @@ export function newSheet_deliverySlips(): PrintSlips {
 
         sheet.pageSetup.orientation = "landscape"
         sheet.pageSetup.paperSize = 8 // A3
+        sheet.pageSetup.horizontalDpi = 600
+        sheet.pageSetup.verticalDpi = 600
         sheet.pageSetup.horizontalCentered = true
         sheet.pageSetup.margins = {
             top: 0.5,
