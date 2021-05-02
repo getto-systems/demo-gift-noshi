@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version : 0.11.0
+
+- fix: sheet : See merge request getto-systems-base/projects/demo/gift-noshi!47
+- apply: example : See merge request getto-systems-base/projects/demo/gift-noshi!45
+
+- fix: nginx config : See merge request getto-systems-base/projects/demo/gift-noshi!46
+- add: code-workspace : See merge request getto-systems-base/projects/demo/gift-noshi!44
+
+
 ## Version : 0.10.0
 
 - fix: page setup : See merge request getto-systems-base/projects/demo/gift-noshi!42
