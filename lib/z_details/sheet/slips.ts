@@ -67,8 +67,8 @@ export function newSheet_deliverySlips(): PrintSlips {
 
         sheet.pageSetup.orientation = "landscape"
         sheet.pageSetup.paperSize = PaperSize.A4
-        sheet.pageSetup.horizontalDpi = 600
-        sheet.pageSetup.verticalDpi = 600
+        sheet.pageSetup.horizontalDpi = 1200
+        sheet.pageSetup.verticalDpi = 1200
         sheet.pageSetup.horizontalCentered = true
         sheet.pageSetup.margins = {
             top: 0.25,
@@ -78,6 +78,10 @@ export function newSheet_deliverySlips(): PrintSlips {
             header: 0,
             footer: 0,
         }
+        sheet.pageSetup.blackAndWhite = true
+        sheet.pageSetup.fitToPage = true
+        sheet.pageSetup.fitToWidth = 1
+        sheet.pageSetup.fitToHeight = 3
 
         const column = sheet.getColumn("A")
         column.width = 13
@@ -116,8 +120,8 @@ export function newSheet_deliverySlips(): PrintSlips {
 
         sheet.pageSetup.orientation = "landscape"
         sheet.pageSetup.paperSize = 8 // A3
-        sheet.pageSetup.horizontalDpi = 600
-        sheet.pageSetup.verticalDpi = 600
+        sheet.pageSetup.horizontalDpi = 1200
+        sheet.pageSetup.verticalDpi = 1200
         sheet.pageSetup.horizontalCentered = true
         sheet.pageSetup.margins = {
             top: 0.5,
@@ -127,6 +131,8 @@ export function newSheet_deliverySlips(): PrintSlips {
             header: 0,
             footer: 0,
         }
+        sheet.pageSetup.blackAndWhite = true
+        sheet.pageSetup.fitToWidth = 1
 
         const column = sheet.getColumn("A")
         column.width = 16.88
