@@ -7,7 +7,6 @@ import { ToggleMenuExpandInfra, ToggleMenuExpandStore } from "../infra"
 
 import { ToggleMenuExpandPod } from "../method"
 
-import { ToggleMenuExpandEvent } from "../event"
 import { MenuCategoryPath } from "../../kernel/data"
 
 interface Toggle {
@@ -50,10 +49,6 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
             }),
         })
     }
-}
-
-export function toggleMenuExpandEventHasDone(_event: ToggleMenuExpandEvent): boolean {
-    return true
 }
 
 const EMPTY_BADGE: MenuBadge = new Map()

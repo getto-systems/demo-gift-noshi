@@ -7,8 +7,6 @@ import { initMenuExpand, MenuBadge } from "../../kernel/infra"
 
 import { LoadMenuPod } from "../method"
 
-import { LoadMenuEvent } from "../event"
-
 interface Load {
     (infra: LoadMenuInfra, store: LoadMenuStore): LoadMenuPod
 }
@@ -35,10 +33,6 @@ export const loadMenu: Load = (infra, store) => (detecter) => async (post) => {
             menuBadge: EMPTY_BADGE, // ロードに時間がかかる可能性があるのであとでロードする
         }),
     })
-}
-
-export function loadMenuEventHasDone(_event: LoadMenuEvent): boolean {
-    return true
 }
 
 const EMPTY_BADGE: MenuBadge = new Map()

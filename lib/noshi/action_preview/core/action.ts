@@ -7,7 +7,7 @@ import { LoadCurrentDeliverySlipEvent } from "../../load_slips/event"
 import { PrintDeliverySlipsEvent } from "../../print_slips/event"
 
 export interface PreviewCoreAction extends ApplicationStateAction<PreviewCoreState> {
-    print(): void
+    print(): Promise<PreviewCoreState>
 }
 
 export type PreviewCoreMaterial = Readonly<{

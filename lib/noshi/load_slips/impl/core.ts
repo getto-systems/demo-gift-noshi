@@ -8,8 +8,6 @@ import {
     LoadDeliverySlipsPod,
 } from "../method"
 
-import { LoadCurrentDeliverySlipEvent, LoadDeliverySlipsEvent } from "../event"
-
 import { DeliverySlip, DeliverySlipData, DeliverySlipPrintState } from "../../slip/data"
 import { NextDeliverySlipHref } from "../data"
 
@@ -69,10 +67,6 @@ export const loadDeliverySlips: LoadSlips = (infra) => (detecter) => async (post
             { slips: <DeliverySlip[]>[], hasMatched: false },
         ).slips,
     })
-}
-
-export function loadDeliverySlipsEventHasDone(_event: LoadDeliverySlipsEvent): boolean {
-    return true
 }
 
 interface LoadCurrentSlip {
@@ -138,8 +132,4 @@ export const loadCurrentDeliverySlip: LoadCurrentSlip = (infra) => (detecter) =>
             return { hasNext: true, href: result.next.href }
         }
     }
-}
-
-export function loadCurrentDeliverySlipEventHasDone(_event: LoadCurrentDeliverySlipEvent): boolean {
-    return true
 }

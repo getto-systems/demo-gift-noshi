@@ -41,7 +41,7 @@ class Action extends ApplicationAbstractStateAction<PreviewCoreState> implements
         this.material = material
     }
 
-    print(): void {
-        this.material.print(this.post)
+    print(): Promise<PreviewCoreState> {
+        return this.material.print(this.post)
     }
 }

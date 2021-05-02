@@ -7,8 +7,6 @@ import { UpdateMenuBadgeInfra, UpdateMenuBadgeStore } from "../infra"
 
 import { UpdateMenuBadgePod } from "../method"
 
-import { UpdateMenuBadgeEvent } from "../event"
-
 interface Update {
     (infra: UpdateMenuBadgeInfra, store: UpdateMenuBadgeStore): UpdateMenuBadgePod
 }
@@ -37,10 +35,6 @@ export const updateMenuBadge: Update = (infra, store) => (detecter) => async (po
         type: "succeed-to-update",
         menu: buildMenu({ ...buildParams, menuBadge: response.value }),
     })
-}
-
-export function updateMenuBadgeEventHasDone(_event: UpdateMenuBadgeEvent): boolean {
-    return true
 }
 
 const EMPTY_BADGE: MenuBadge = new Map()

@@ -1,31 +1,23 @@
-import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
 import { mockPrintResource } from "./mock"
 
 import { initPrintView } from "./impl"
 
 describe("Print", () => {
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
+    test("terminate", async () => {
+        const { view } = standard()
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: (check) => {
-                        view.terminate()
-                        view.resource.preview.slips.ignite()
+        const runner = setupActionTestRunner(view.resource.preview.slips.subscriber)
 
-                        setTimeout(check, 256) // wait for events.
-                    },
-                    examine: (stack) => {
-                        // no event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
-
-            view.resource.preview.slips.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => {
+            view.terminate()
+            return view.resource.preview.slips.ignite()
+        }).then((stack) => {
+            // no event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 })
 
 function standard() {

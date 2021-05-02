@@ -12,8 +12,6 @@ import {
     FindNextVersionPod,
 } from "../method"
 
-import { FindNextVersionEvent } from "../event"
-
 import { CheckDeployExistsRemoteError, Version } from "../data"
 
 interface Detecter {
@@ -65,17 +63,6 @@ export const findNextVersion: Find = (infra) => (detecter) => async (post) => {
             version: versionToString(next.version),
             target,
         })
-    }
-}
-
-export function findNextVersionEventHasDone(event: FindNextVersionEvent): boolean {
-    switch (event.type) {
-        case "take-longtime-to-find":
-            return false
-
-        case "succeed-to-find":
-        case "failed-to-find":
-            return true
     }
 }
 

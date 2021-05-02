@@ -1,7 +1,4 @@
-import {
-    setupAsyncActionTestRunner,
-    setupSyncActionTestRunner,
-} from "../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
 import { markMenuCategoryLabel, standard_MenuTree } from "../kernel/impl/test_helper"
 
@@ -14,9 +11,6 @@ import { mockLoadMenuLocationDetecter } from "../kernel/impl/mock"
 import { initLoadMenuCoreAction, initLoadMenuCoreMaterial } from "./core/impl"
 
 import { menuExpandRepositoryConverter } from "../kernel/impl/converter"
-import { loadMenuEventHasDone } from "../load_menu/impl/core"
-import { updateMenuBadgeEventHasDone } from "../update_menu_badge/impl/core"
-import { toggleMenuExpandEventHasDone } from "../toggle_menu_expand/impl/core"
 
 import {
     GetMenuBadgeRemotePod,
@@ -25,245 +19,201 @@ import {
 } from "../kernel/infra"
 
 import { LoadMenuResource } from "./resource"
-import { LoadMenuCoreState } from "./core/action"
 
 import { LoadMenuLocationDetecter } from "../kernel/method"
 
 describe("Menu", () => {
-    test("load menu", () =>
-        new Promise<void>((done) => {
-            const { resource } = standard()
+    test("load menu", async () => {
+        const { resource } = standard()
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
+        const runner = setupActionTestRunner(resource.menu.subscriber)
+
+        await runner(() => resource.menu.ignite()).then((stack) => {
+            expect(stack).toEqual([
                 {
-                    statement: () => {
-                        resource.menu.ignite()
+                    type: "succeed-to-load",
+                    menu: [
+                        $category("MAIN", ["MAIN"], 0, [
+                            $item("ホーム", "home", "/1.0.0/index.html", 0),
+                            item("ドキュメント", "docs", "/1.0.0/docs/index.html", 0),
+                        ]),
+                        category("DOCUMENT", ["DOCUMENT"], 0, [
+                            item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                            category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                            ]),
+                        ]),
+                    ],
+                },
+                {
+                    type: "succeed-to-update",
+                    menu: [
+                        $category("MAIN", ["MAIN"], 30, [
+                            $item("ホーム", "home", "/1.0.0/index.html", 10),
+                            item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
+                        ]),
+                        category("DOCUMENT", ["DOCUMENT"], 0, [
+                            item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                            category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                            ]),
+                        ]),
+                    ],
+                },
+            ])
+        })
+    })
+
+    test("load menu; saved expands", async () => {
+        const { resource } = expand()
+
+        const runner = setupActionTestRunner(resource.menu.subscriber)
+
+        await runner(() => resource.menu.ignite()).then((stack) => {
+            expect(stack).toEqual([
+                {
+                    type: "succeed-to-load",
+                    menu: [
+                        $category("MAIN", ["MAIN"], 0, [
+                            $item("ホーム", "home", "/1.0.0/index.html", 0),
+                            item("ドキュメント", "docs", "/1.0.0/docs/index.html", 0),
+                        ]),
+                        $category("DOCUMENT", ["DOCUMENT"], 0, [
+                            item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                            category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                            ]),
+                        ]),
+                    ],
+                },
+                {
+                    type: "succeed-to-update",
+                    menu: [
+                        $category("MAIN", ["MAIN"], 30, [
+                            $item("ホーム", "home", "/1.0.0/index.html", 10),
+                            item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
+                        ]),
+                        $category("DOCUMENT", ["DOCUMENT"], 0, [
+                            item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                            category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                            ]),
+                        ]),
+                    ],
+                },
+            ])
+        })
+    })
+
+    test("load menu; toggle expands", async () => {
+        const { resource, repository } = standard()
+        const menuExpand = repository.menuExpand(menuExpandRepositoryConverter)
+
+        const runner = setupActionTestRunner(resource.menu.subscriber)
+
+        await runner(() => resource.menu.ignite())
+        await runner(() => resource.menu.show([markMenuCategoryLabel("DOCUMENT")])).then(
+            (stack) => {
+                expect(stack).toEqual([
+                    {
+                        type: "succeed-to-toggle",
+                        menu: [
+                            $category("MAIN", ["MAIN"], 30, [
+                                $item("ホーム", "home", "/1.0.0/index.html", 10),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
+                            ]),
+                            $category("DOCUMENT", ["DOCUMENT"], 0, [
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                                ]),
+                            ]),
+                        ],
                     },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                type: "succeed-to-load",
-                                menu: [
-                                    $category("MAIN", ["MAIN"], 0, [
-                                        $item("ホーム", "home", "/1.0.0/index.html", 0),
-                                        item("ドキュメント", "docs", "/1.0.0/docs/index.html", 0),
-                                    ]),
-                                    category("DOCUMENT", ["DOCUMENT"], 0, [
-                                        item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
-                                        category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
-                                            item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
-                                        ]),
-                                    ]),
-                                ],
-                            },
-                            {
-                                type: "succeed-to-update",
-                                menu: [
-                                    $category("MAIN", ["MAIN"], 30, [
-                                        $item("ホーム", "home", "/1.0.0/index.html", 10),
-                                        item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
-                                    ]),
-                                    category("DOCUMENT", ["DOCUMENT"], 0, [
-                                        item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
-                                        category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
-                                            item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
-                                        ]),
-                                    ]),
-                                ],
-                            },
-                        ])
-                    },
+                ])
+            },
+        )
+        await runner(() =>
+            resource.menu.show([
+                markMenuCategoryLabel("DOCUMENT"),
+                markMenuCategoryLabel("DETAIL"),
+            ]),
+        ).then(async (stack) => {
+            expect(stack).toEqual([
+                {
+                    type: "succeed-to-toggle",
+                    menu: [
+                        $category("MAIN", ["MAIN"], 30, [
+                            $item("ホーム", "home", "/1.0.0/index.html", 10),
+                            item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
+                        ]),
+                        $category("DOCUMENT", ["DOCUMENT"], 0, [
+                            item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                            $category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                            ]),
+                        ]),
+                    ],
                 },
             ])
 
-            resource.menu.subscriber.subscribe(runner(done))
-        }))
-
-    test("load menu; saved expands", () =>
-        new Promise<void>((done) => {
-            const { resource } = expand()
-
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
+            const result = await menuExpand.get()
+            if (!result.success) {
+                throw new Error("menu expand get failed")
+            }
+            if (!result.found) {
+                throw new Error("menu expand not found")
+            }
+            expect(result.value.values).toEqual([["DOCUMENT"], ["DOCUMENT", "DETAIL"]])
+        })
+        await runner(() =>
+            resource.menu.hide([
+                markMenuCategoryLabel("DOCUMENT"),
+                markMenuCategoryLabel("DETAIL"),
+            ]),
+        ).then(async (stack) => {
+            expect(stack).toEqual([
                 {
-                    statement: () => {
-                        resource.menu.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                type: "succeed-to-load",
-                                menu: [
-                                    $category("MAIN", ["MAIN"], 0, [
-                                        $item("ホーム", "home", "/1.0.0/index.html", 0),
-                                        item("ドキュメント", "docs", "/1.0.0/docs/index.html", 0),
-                                    ]),
-                                    $category("DOCUMENT", ["DOCUMENT"], 0, [
-                                        item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
-                                        category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
-                                            item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
-                                        ]),
-                                    ]),
-                                ],
-                            },
-                            {
-                                type: "succeed-to-update",
-                                menu: [
-                                    $category("MAIN", ["MAIN"], 30, [
-                                        $item("ホーム", "home", "/1.0.0/index.html", 10),
-                                        item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
-                                    ]),
-                                    $category("DOCUMENT", ["DOCUMENT"], 0, [
-                                        item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
-                                        category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
-                                            item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
-                                        ]),
-                                    ]),
-                                ],
-                            },
-                        ])
-                    },
+                    type: "succeed-to-toggle",
+                    menu: [
+                        $category("MAIN", ["MAIN"], 30, [
+                            $item("ホーム", "home", "/1.0.0/index.html", 10),
+                            item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
+                        ]),
+                        $category("DOCUMENT", ["DOCUMENT"], 0, [
+                            item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                            category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                            ]),
+                        ]),
+                    ],
                 },
             ])
 
-            resource.menu.subscriber.subscribe(runner(done))
-        }))
+            const result = await menuExpand.get()
+            if (!result.success) {
+                throw new Error("menu expand get failed")
+            }
+            if (!result.found) {
+                throw new Error("menu expand not found")
+            }
+            expect(result.value.values).toEqual([["DOCUMENT"]])
+        })
+    })
 
-    test("load menu; toggle expands", () =>
-        new Promise<void>((done) => {
-            const { resource, repository } = standard()
-            const menuExpand = repository.menuExpand(menuExpandRepositoryConverter)
+    test("terminate", async () => {
+        const { resource } = standard()
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.menu.ignite()
-                    },
-                    examine: () => {
-                        // load のテストは他でやる
-                    },
-                },
-                {
-                    statement: () => {
-                        resource.menu.show([markMenuCategoryLabel("DOCUMENT")])
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                type: "succeed-to-toggle",
-                                menu: [
-                                    $category("MAIN", ["MAIN"], 30, [
-                                        $item("ホーム", "home", "/1.0.0/index.html", 10),
-                                        item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
-                                    ]),
-                                    $category("DOCUMENT", ["DOCUMENT"], 0, [
-                                        item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
-                                        category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
-                                            item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
-                                        ]),
-                                    ]),
-                                ],
-                            },
-                        ])
-                    },
-                },
-                {
-                    statement: () => {
-                        resource.menu.show([
-                            markMenuCategoryLabel("DOCUMENT"),
-                            markMenuCategoryLabel("DETAIL"),
-                        ])
-                    },
-                    examine: async (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                type: "succeed-to-toggle",
-                                menu: [
-                                    $category("MAIN", ["MAIN"], 30, [
-                                        $item("ホーム", "home", "/1.0.0/index.html", 10),
-                                        item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
-                                    ]),
-                                    $category("DOCUMENT", ["DOCUMENT"], 0, [
-                                        item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
-                                        $category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
-                                            item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
-                                        ]),
-                                    ]),
-                                ],
-                            },
-                        ])
+        const runner = setupActionTestRunner(resource.menu.subscriber)
 
-                        const result = await menuExpand.get()
-                        if (!result.success) {
-                            throw new Error("menu expand get failed")
-                        }
-                        if (!result.found) {
-                            throw new Error("menu expand not found")
-                        }
-                        expect(result.value.values).toEqual([["DOCUMENT"], ["DOCUMENT", "DETAIL"]])
-                    },
-                },
-                {
-                    statement: () => {
-                        resource.menu.hide([
-                            markMenuCategoryLabel("DOCUMENT"),
-                            markMenuCategoryLabel("DETAIL"),
-                        ])
-                    },
-                    examine: async (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                type: "succeed-to-toggle",
-                                menu: [
-                                    $category("MAIN", ["MAIN"], 30, [
-                                        $item("ホーム", "home", "/1.0.0/index.html", 10),
-                                        item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
-                                    ]),
-                                    $category("DOCUMENT", ["DOCUMENT"], 0, [
-                                        item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
-                                        category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
-                                            item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
-                                        ]),
-                                    ]),
-                                ],
-                            },
-                        ])
-
-                        const result = await menuExpand.get()
-                        if (!result.success) {
-                            throw new Error("menu expand get failed")
-                        }
-                        if (!result.found) {
-                            throw new Error("menu expand not found")
-                        }
-                        expect(result.value.values).toEqual([["DOCUMENT"]])
-                    },
-                },
-            ])
-
-            resource.menu.subscriber.subscribe(runner(done))
-        }))
-
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { resource } = standard()
-
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: (check) => {
-                        resource.menu.terminate()
-                        resource.menu.ignite()
-
-                        setTimeout(check, 256) // wait for event...
-                    },
-                    examine: (stack) => {
-                        // no input/validate event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
-
-            resource.menu.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => {
+            resource.menu.terminate()
+            return resource.menu.ignite()
+        }).then((stack) => {
+            // no input/validate event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 
     type MenuNode =
         | Readonly<{
@@ -392,25 +342,4 @@ function standard_getMenuBadge(): GetMenuBadgeRemotePod {
         }),
         { wait_millisecond: 0 },
     )
-}
-
-function actionHasDone(state: LoadMenuCoreState): boolean {
-    switch (state.type) {
-        case "initial-menu":
-            return false
-
-        case "succeed-to-load":
-        case "required-to-login":
-        case "repository-error":
-            // カバレッジのため、loadMenuEventHasDone はコールしたい
-            // が、succeed-to-load では hasDone しない
-            return loadMenuEventHasDone(state) && state.type !== "succeed-to-load"
-
-        case "succeed-to-update":
-        case "failed-to-update":
-            return updateMenuBadgeEventHasDone(state)
-
-        case "succeed-to-toggle":
-            return toggleMenuExpandEventHasDone(state)
-    }
 }

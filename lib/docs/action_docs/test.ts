@@ -1,34 +1,26 @@
-import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
 import { mockDocsResource } from "./mock"
 
 import { initDocsView } from "./impl"
 
 describe("DocsContent", () => {
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { view } = standard_elements()
+    test("terminate", async () => {
+        const { view } = standard()
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: (check) => {
-                        view.terminate()
-                        view.resource.menu.ignite()
+        const runner = setupActionTestRunner(view.resource.menu.subscriber)
 
-                        setTimeout(check, 256) // wait for events.
-                    },
-                    examine: (stack) => {
-                        // no event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
-
-            view.resource.menu.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => {
+            view.terminate()
+            return view.resource.menu.ignite()
+        }).then((stack) => {
+            // no event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 })
 
-function standard_elements() {
+function standard() {
     const view = initView()
 
     return { view }
