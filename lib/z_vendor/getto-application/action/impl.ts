@@ -3,10 +3,10 @@ import { initActionStatePubSub } from "./infra/state_pub_sub"
 import { initActionTerminateRunner } from "./infra/terminate_runner"
 
 import {
-    ActionIgniteHook,
-    ActionIgniteRunner,
-    ActionTerminateHook,
-    ActionTerminateRunner,
+    ApplicationActionIgniteHook,
+    ApplicationActionIgniteRunner,
+    ApplicationActionTerminateHook,
+    ApplicationActionTerminateRunner,
 } from "./infra"
 
 import { ApplicationActionStateSubscriber, ApplicationStateAction } from "./action"
@@ -19,37 +19,35 @@ export abstract class ApplicationAbstractStateAction<S> implements ApplicationSt
     // this.material.doSomething(this.post) できるようにプロパティとして提供
     readonly post: Post<S>
 
-    readonly igniteRunner: ActionIgniteRunner = initActionIgniteRunner()
-    readonly terminateRunner: ActionTerminateRunner = initActionTerminateRunner()
+    readonly igniteRunner: ApplicationActionIgniteRunner<S>
+    readonly terminateRunner: ApplicationActionTerminateRunner = initActionTerminateRunner()
 
-    constructor() {
+    constructor(hook: ApplicationActionIgniteHook<S> = async () => this.initialState) {
         const { pub, sub } = initActionStatePubSub<S>()
         this.subscriber = sub
-
         this.post = (state: S) => pub.post(state)
 
+        this.igniteRunner = initActionIgniteRunner(hook)
         this.terminateHook(() => {
             pub.terminate()
         })
     }
 
-    igniteHook(hook: ActionIgniteHook): void {
-        this.igniteRunner.register(hook)
-    }
-    terminateHook(hook: ActionTerminateHook): void {
+    terminateHook(hook: ApplicationActionTerminateHook): void {
         this.terminateRunner.register(hook)
     }
 
-    ignite(): void {
-        // すべての subscriber が登録された後で ignite するための setTimeout
-        setTimeout(() => this.igniteRunner.ignite())
+    ignite(): Promise<S> {
+        return new Promise((resolve) => {
+            // すべての subscriber が登録された後で ignite するための setTimeout
+            setTimeout(() => resolve(this.igniteRunner.ignite()))
+        })
     }
     terminate(): void {
-        this.igniteRunner.terminate()
         this.terminateRunner.terminate()
     }
 }
 
 interface Post<S> {
-    (state: S): void
+    (state: S): S
 }

@@ -1,9 +1,9 @@
 import { LoadSeasonEvent } from "./event"
 
 export interface LoadSeasonMethod {
-    (post: Post<LoadSeasonEvent>): void
+    <S>(post: Post<LoadSeasonEvent, S>): Promise<S>
 }
 
-interface Post<E> {
-    (event: E): void
+interface Post<E, S> {
+    (event: E): S
 }

@@ -15,9 +15,9 @@ export interface WorkerProxyMessageMapper<N, M, T> {
 }
 
 export abstract class WorkerAbstractProxy<M, R> implements WorkerProxy<M, R> {
-    post: Post<M>
+    post: PostMessage<M>
 
-    constructor(post: Post<M>) {
+    constructor(post: PostMessage<M>) {
         this.post = post
     }
 
@@ -29,32 +29,36 @@ export abstract class WorkerAbstractProxy<M, R> implements WorkerProxy<M, R> {
 }
 class ProxyMethod<N, M, E> implements WorkerProxyMethod<N, M, E> {
     readonly method: N
-    post: Post<WorkerProxyCallMessage<N, M>>
+    post: PostMessage<WorkerProxyCallMessage<N, M>>
 
     idGenerator: IDGenerator
-    map: Map<number, Post<E>> = new Map()
+    map: Map<number, PostMessage<E>> = new Map()
 
-    constructor(method: N, post: Post<WorkerProxyCallMessage<N, M>>) {
+    constructor(method: N, post: PostMessage<WorkerProxyCallMessage<N, M>>) {
         this.method = method
         this.post = post
         this.idGenerator = idGenerator()
     }
 
-    call(params: M, post: Post<E>): void {
-        const id = this.idGenerator()
-        this.map.set(id, post)
-        this.post({ method: this.method, id, params })
+    call<S>(params: M, post: Post<E, S>): Promise<S> {
+        return new Promise((resolve) => {
+            const id = this.idGenerator()
+            this.map.set(id, (event: E) => {
+                resolve(post(event))
+            })
+            this.post({ method: this.method, id, params })
+        })
     }
-    resolve({ id, done, event }: WorkerProxyCallResponse<N, E>): void {
-        const post = this.map.get(id)
+    resolve(response: WorkerProxyCallResponse<N, E>): void {
+        const post = this.map.get(response.id)
         if (!post) {
             throw new Error("handler is not set")
         }
 
-        post(event)
-
-        if (done) {
-            this.map.delete(id)
+        if (!response.done) {
+            post(response.event)
+        } else {
+            this.map.delete(response.id)
         }
     }
 }
@@ -67,6 +71,9 @@ function idGenerator(): IDGenerator {
 interface IDGenerator {
     (): WorkerProxyCallID
 }
-interface Post<M> {
+interface Post<E, S> {
+    (event: E): S
+}
+interface PostMessage<M> {
     (message: M): void
 }

@@ -34,7 +34,9 @@ class Action<T, E>
     get(): ConvertBoardFieldResult<T, E> {
         return this.material.convert(this.post)
     }
-    check(): void {
-        this.material.convert(this.post)
+    check(): Promise<ValidateBoardFieldState<E>> {
+        return new Promise((resolve) => {
+            this.material.convert((state) => resolve(this.post(state)))
+        })
     }
 }

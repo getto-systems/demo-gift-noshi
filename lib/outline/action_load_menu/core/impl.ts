@@ -52,30 +52,31 @@ class Action
     material: LoadMenuCoreMaterial
 
     constructor(material: LoadMenuCoreMaterial) {
-        super()
-        this.material = material
-
-        this.igniteHook(() => {
-            this.material.load((event) => {
-                this.post(event)
+        super(async () =>
+            this.material.load(async (event) => {
+                const state = this.post(event)
 
                 switch (event.type) {
                     case "succeed-to-load":
                         // 初期ロード完了で最初の badge 更新を行う
-                        this.updateBadge()
+                        return this.updateBadge()
+
+                    default:
+                        return state
                 }
-            })
-        })
+            }),
+        )
+        this.material = material
     }
 
-    updateBadge(): void {
-        this.material.updateBadge(this.post)
+    updateBadge(): Promise<LoadMenuCoreState> {
+        return this.material.updateBadge(this.post)
     }
 
-    show(path: MenuCategoryPath): void {
-        this.material.show(path, this.post)
+    show(path: MenuCategoryPath): Promise<LoadMenuCoreState> {
+        return this.material.show(path, this.post)
     }
-    hide(path: MenuCategoryPath): void {
-        this.material.hide(path, this.post)
+    hide(path: MenuCategoryPath): Promise<LoadMenuCoreState> {
+        return this.material.hide(path, this.post)
     }
 }

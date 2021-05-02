@@ -8,14 +8,14 @@ export interface LoadDeliverySlipsPod {
     (detecter: LoadDeliverySlipsLocationDetecter): LoadDeliverySlipsMethod
 }
 export interface LoadDeliverySlipsMethod {
-    (post: Post<LoadDeliverySlipsEvent>): void
+    <S>(post: Post<LoadDeliverySlipsEvent, S>): Promise<S>
 }
 
 export interface LoadCurrentDeliverySlipPod {
     (detecter: LoadDeliverySlipsLocationDetecter): LoadCurrentDeliverySlipMethod
 }
 export interface LoadCurrentDeliverySlipMethod {
-    (post: Post<LoadCurrentDeliverySlipEvent>): void
+    <S>(post: Post<LoadCurrentDeliverySlipEvent, S>): Promise<S>
 }
 
 type LoadDeliverySlipsLocationTypes = LocationTypes<DeliverySlipNumber>
@@ -23,6 +23,6 @@ export type LoadDeliverySlipsLocationDetecter = LoadDeliverySlipsLocationTypes["
 export type LoadDeliverySlipsLocationDetectMethod = LoadDeliverySlipsLocationTypes["method"]
 export type LoadDeliverySlipsLocationInfo = LoadDeliverySlipsLocationTypes["info"]
 
-interface Post<T> {
-    (event: T): void
+interface Post<E, S> {
+    (event: E): S
 }

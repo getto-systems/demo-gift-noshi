@@ -6,9 +6,9 @@ export interface LoadMenuPod {
     (detecter: LoadMenuLocationDetecter): LoadMenuMethod
 }
 export interface LoadMenuMethod {
-    (post: Post<LoadMenuEvent>): void
+    <S>(post: Post<LoadMenuEvent, S>): Promise<S>
 }
 
-interface Post<T> {
-    (event: T): void
+interface Post<E, S> {
+    (event: E): S
 }

@@ -36,11 +36,7 @@ class Action
     material: PreviewSlipsMaterial
 
     constructor(material: PreviewSlipsMaterial) {
-        super()
+        super(() => this.material.load(this.post))
         this.material = material
-
-        this.igniteHook(() => {
-            this.material.load(this.post)
-        })
     }
 }

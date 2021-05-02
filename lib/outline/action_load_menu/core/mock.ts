@@ -13,18 +13,17 @@ class Action extends ApplicationMockStateAction<LoadMenuCoreState> implements Lo
     readonly initialState = initialLoadMenuCoreState
 
     constructor(menu: Menu) {
-        super()
-        this.addMockIgniter(() => ({ type: "succeed-to-load", menu }))
+        super(async () => ({ type: "succeed-to-load", menu }))
     }
 
-    updateBadge() {
-        // mock では特に何もしない
+    async updateBadge(): Promise<LoadMenuCoreState> {
+        return this.initialState
     }
-    show() {
-        // mock では特に何もしない
+    async show(): Promise<LoadMenuCoreState> {
+        return this.initialState
     }
-    hide() {
-        // mock では特に何もしない
+    async hide(): Promise<LoadMenuCoreState> {
+        return this.initialState
     }
 }
 

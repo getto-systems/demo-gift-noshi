@@ -7,7 +7,6 @@ import { ToggleMenuExpandInfra, ToggleMenuExpandStore } from "../infra"
 
 import { ToggleMenuExpandPod } from "../method"
 
-import { ToggleMenuExpandEvent } from "../event"
 import { MenuCategoryPath } from "../../kernel/data"
 
 interface Toggle {
@@ -31,8 +30,7 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
 
         const storeResult = await menuExpand.set(expand)
         if (!storeResult.success) {
-            post({ type: "repository-error", err: storeResult.err })
-            return
+            return post({ type: "repository-error", err: storeResult.err })
         }
 
         store.menuExpand.set(expand)
@@ -40,7 +38,7 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
         const fetchMenuBadgeResult = store.menuBadge.get()
         const badge = fetchMenuBadgeResult.found ? fetchMenuBadgeResult.value : EMPTY_BADGE
 
-        post({
+        return post({
             type: "succeed-to-toggle",
             menu: buildMenu({
                 version: infra.version,
@@ -51,10 +49,6 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
             }),
         })
     }
-}
-
-export function toggleMenuExpandEventHasDone(_event: ToggleMenuExpandEvent): boolean {
-    return true
 }
 
 const EMPTY_BADGE: MenuBadge = new Map()

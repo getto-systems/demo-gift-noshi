@@ -1,14 +1,15 @@
 import { ApplicationAbstractStateAction } from "./impl"
 
 import { ApplicationStateAction } from "./action"
+import { ApplicationActionIgniteHook } from "./infra"
 
 export abstract class ApplicationMockStateAction<S>
     extends ApplicationAbstractStateAction<S>
     implements ApplicationStateAction<S> {
-    addMockIgniter(igniter: MockIgniter<S>): void {
-        this.igniteHook(() => this.post(igniter()))
+    constructor(hook: ApplicationActionIgniteHook<S> = async () => this.initialState) {
+        super(async () => {
+            const state = await hook()
+            return this.initialState === state ? state : this.post(state)
+        })
     }
-}
-interface MockIgniter<S> {
-    (): S
 }
