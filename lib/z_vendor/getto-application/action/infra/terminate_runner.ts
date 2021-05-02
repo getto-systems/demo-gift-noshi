@@ -1,13 +1,13 @@
-import { ActionTerminateHook, ActionTerminateRunner } from "../infra"
+import { ApplicationActionTerminateHook, ApplicationActionTerminateRunner } from "../infra"
 
-export function initActionTerminateRunner(): ActionTerminateRunner {
+export function initActionTerminateRunner(): ApplicationActionTerminateRunner {
     return new Runner()
 }
 
-class Runner implements ActionTerminateRunner {
-    hooks: ActionTerminateHook[] = []
+class Runner implements ApplicationActionTerminateRunner {
+    hooks: ApplicationActionTerminateHook[] = []
 
-    register(hook: ActionTerminateHook): void {
+    register(hook: ApplicationActionTerminateHook): void {
         this.hooks = [...this.hooks, hook]
     }
     terminate(): void {

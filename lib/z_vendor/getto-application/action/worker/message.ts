@@ -5,7 +5,7 @@ export type WorkerProxySpec<N, P, E> = {
 }
 export interface WorkerProxyMethod<N, P, E> {
     readonly method: N
-    call(params: P, post: Post<E>): void
+    call<S>(params: P, post: Post<E, S>): Promise<S>
     resolve(response: WorkerProxyCallResponse<N, E>): void
 }
 export type WorkerProxyCallMessage<N, P> = Readonly<{
@@ -13,15 +13,12 @@ export type WorkerProxyCallMessage<N, P> = Readonly<{
     id: WorkerProxyCallID
     params: P
 }>
-export type WorkerProxyCallResponse<N, E> = Readonly<{
-    method: N
-    id: WorkerProxyCallID
-    done: boolean
-    event: E
-}>
+export type WorkerProxyCallResponse<N, E> =
+    | Readonly<{ method: N; id: WorkerProxyCallID; done: false; event: E }>
+    | Readonly<{ method: N; id: WorkerProxyCallID; done: true }>
 
 export type WorkerProxyCallID = number
 
-interface Post<M> {
-    (message: M): void
+interface Post<E, S> {
+    (event: E): S
 }

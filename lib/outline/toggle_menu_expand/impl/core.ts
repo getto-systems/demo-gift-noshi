@@ -31,8 +31,7 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
 
         const storeResult = await menuExpand.set(expand)
         if (!storeResult.success) {
-            post({ type: "repository-error", err: storeResult.err })
-            return
+            return post({ type: "repository-error", err: storeResult.err })
         }
 
         store.menuExpand.set(expand)
@@ -40,7 +39,7 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
         const fetchMenuBadgeResult = store.menuBadge.get()
         const badge = fetchMenuBadgeResult.found ? fetchMenuBadgeResult.value : EMPTY_BADGE
 
-        post({
+        return post({
             type: "succeed-to-toggle",
             menu: buildMenu({
                 version: infra.version,

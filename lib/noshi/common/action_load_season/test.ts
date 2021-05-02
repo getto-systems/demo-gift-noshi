@@ -1,4 +1,4 @@
-import { setupAsyncActionTestRunner } from "../../../z_vendor/getto-application/action/test_helper"
+import { setupAsyncActionTestRunner } from "../../../z_vendor/getto-application/action/test_helper_legacy"
 
 import { mockClock, mockClockPubSub } from "../../../z_vendor/getto-application/infra/clock/mock"
 import { mockRepository } from "../../../z_vendor/getto-application/infra/repository/mock"

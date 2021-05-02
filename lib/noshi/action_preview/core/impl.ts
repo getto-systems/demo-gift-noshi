@@ -37,12 +37,8 @@ class Action extends ApplicationAbstractStateAction<PreviewCoreState> implements
     material: PreviewCoreMaterial
 
     constructor(material: PreviewCoreMaterial) {
-        super()
+        super(() => this.material.load(this.post))
         this.material = material
-
-        this.igniteHook(() => {
-            this.material.load(this.post)
-        })
     }
 
     print(): void {

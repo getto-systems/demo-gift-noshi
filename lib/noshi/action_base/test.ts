@@ -1,4 +1,4 @@
-import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
+import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper_legacy"
 import { initBaseView } from "./impl"
 
 import { mockBaseResource } from "./mock"

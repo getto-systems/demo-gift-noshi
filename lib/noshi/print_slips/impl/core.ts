@@ -14,10 +14,9 @@ export const printDeliverySlips: PrintSlips = (infra) => async (post) => {
 
     const result = await sheet(slips)
     if (!result.success) {
-        post({ type: "failed-to-print", err: result.err })
-        return
+        return post({ type: "failed-to-print", err: result.err })
     }
-    post({ type: "succeed-to-print", href: result.href })
+    return post({ type: "succeed-to-print", href: result.href })
 }
 
 export function printDeliverySlipsEventHasDone(event: PrintDeliverySlipsEvent): boolean {

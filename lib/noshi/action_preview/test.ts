@@ -1,4 +1,4 @@
-import { setupAsyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
+import { setupAsyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper_legacy"
 
 import { standard_DeliverySlips } from "../slip/test_helper"
 

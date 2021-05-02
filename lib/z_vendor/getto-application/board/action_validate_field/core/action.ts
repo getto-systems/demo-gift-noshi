@@ -7,7 +7,7 @@ import { ConvertBoardFieldResult, ValidateBoardFieldResult } from "../../validat
 export interface ValidateBoardFieldAction<T, E>
     extends ApplicationStateAction<ValidateBoardFieldState<E>> {
     get(): ConvertBoardFieldResult<T, E>
-    check(): void
+    check(): Promise<ValidateBoardFieldState<E>>
 }
 
 export type ValidateBoardFieldMaterial<T, E> = Readonly<{

@@ -1,65 +1,49 @@
-import { setupSyncActionTestRunner } from "../../action/test_helper"
+import { setupActionTestRunner } from "../../action/test_helper"
 
 import { initValidateBoardAction } from "./core/impl"
 
 describe("ValidateBoard", () => {
-    test("validate; all valid state", () =>
-        new Promise<void>((done) => {
-            const { action, handler } = standard()
+    test("validate; all valid state", async () => {
+        const { action, handler } = standard()
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        // all valid
-                        handler.name({ valid: true })
-                        handler.description({ valid: true })
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual(["initial", "valid"])
-                    },
-                },
-            ])
+        const runner = setupActionTestRunner(action.subscriber)
 
-            action.subscriber.subscribe(runner(done))
-        }))
+        await runner(async () => {
+            handler.name({ valid: true })
+            handler.description({ valid: true })
+            return action.initialState
+        }).then((stack) => {
+            expect(stack).toEqual(["initial", "valid"])
+        })
+    })
 
-    test("validate; invalid exists", () =>
-        new Promise<void>((done) => {
-            const { action, handler } = standard()
+    test("validate; invalid exists", async () => {
+        const { action, handler } = standard()
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        handler.name({ valid: false, err: ["invalid"] }) // invalid
-                        handler.description({ valid: true })
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual(["invalid", "invalid"])
-                    },
-                },
-            ])
+        const runner = setupActionTestRunner(action.subscriber)
 
-            action.subscriber.subscribe(runner(done))
-        }))
+        await runner(async () => {
+            handler.name({ valid: false, err: ["invalid"] }) // invalid
+            handler.description({ valid: true })
+            return action.initialState
+        }).then((stack) => {
+            expect(stack).toEqual(["invalid", "invalid"])
+        })
+    })
 
-    test("validate; initial exists", () =>
-        new Promise<void>((done) => {
-            const { action, handler } = standard()
+    test("validate; initial exists", async () => {
+        const { action, handler } = standard()
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        handler.name({ valid: true })
-                        // description: initial state
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual(["initial"])
-                    },
-                },
-            ])
+        const runner = setupActionTestRunner(action.subscriber)
 
-            action.subscriber.subscribe(runner(done))
-        }))
+        await runner(async () => {
+            handler.name({ valid: true })
+            // description: initial state
+            return action.initialState
+        }).then((stack) => {
+            expect(stack).toEqual(["initial"])
+        })
+    })
 
     test("get", () => {
         const { action } = standard()

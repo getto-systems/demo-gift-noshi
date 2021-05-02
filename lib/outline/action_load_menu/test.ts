@@ -1,7 +1,7 @@
 import {
     setupAsyncActionTestRunner,
     setupSyncActionTestRunner,
-} from "../../z_vendor/getto-application/action/test_helper"
+} from "../../z_vendor/getto-application/action/test_helper_legacy"
 
 import { markMenuCategoryLabel, standard_MenuTree } from "../kernel/impl/test_helper"
 

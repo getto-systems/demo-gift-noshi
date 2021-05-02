@@ -28,13 +28,12 @@ export const updateMenuBadge: Update = (infra, store) => (detecter) => async (po
 
     const response = await getMenuBadge({ type: "always" })
     if (!response.success) {
-        post({ type: "failed-to-update", menu: buildMenu(buildParams), err: response.err })
-        return
+        return post({ type: "failed-to-update", menu: buildMenu(buildParams), err: response.err })
     }
 
     store.menuBadge.set(response.value)
 
-    post({
+    return post({
         type: "succeed-to-update",
         menu: buildMenu({ ...buildParams, menuBadge: response.value }),
     })

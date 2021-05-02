@@ -1,9 +1,9 @@
 import { PrintDeliverySlipsEvent } from "./event"
 
 export interface PrintDeliverySlipsMethod {
-    (post: Post<PrintDeliverySlipsEvent>): void
+    <S>(post: Post<PrintDeliverySlipsEvent, S>): Promise<S>
 }
 
-interface Post<T> {
-    (event: T): void
+interface Post<E, S> {
+    (event: E): S
 }

@@ -7,9 +7,9 @@ export interface ToggleMenuExpandPod {
     (detecter: LoadMenuLocationDetecter): ToggleMenuExpandMethod
 }
 export interface ToggleMenuExpandMethod {
-    (path: MenuCategoryPath, post: Post<ToggleMenuExpandEvent>): void
+    <S>(path: MenuCategoryPath, post: Post<ToggleMenuExpandEvent, S>): Promise<S>
 }
 
-interface Post<T> {
-    (event: T): void
+interface Post<E, S> {
+    (event: E): S
 }

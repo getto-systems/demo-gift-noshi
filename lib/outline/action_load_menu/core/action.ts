@@ -11,9 +11,9 @@ import { ToggleMenuExpandEvent } from "../../toggle_menu_expand/event"
 import { MenuCategoryPath } from "../../kernel/data"
 
 export interface LoadMenuCoreAction extends ApplicationStateAction<LoadMenuCoreState> {
-    updateBadge(): void
-    show(path: MenuCategoryPath): void
-    hide(path: MenuCategoryPath): void
+    updateBadge(): Promise<LoadMenuCoreState>
+    show(path: MenuCategoryPath): Promise<LoadMenuCoreState>
+    hide(path: MenuCategoryPath): Promise<LoadMenuCoreState>
 }
 
 export type LoadMenuCoreMaterial = Readonly<{

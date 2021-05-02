@@ -1,33 +1,29 @@
-import { ActionIgniteHook, ActionIgniteRunner } from "../infra"
+import { ApplicationActionIgniteHook, ApplicationActionIgniteRunner } from "../infra"
 
-export function initActionIgniteRunner(): ActionIgniteRunner {
-    return new Runner()
+export function initActionIgniteRunner<S>(
+    hook: ApplicationActionIgniteHook<S>,
+): ApplicationActionIgniteRunner<S> {
+    return new Runner(hook)
 }
 
-class Runner implements ActionIgniteRunner {
-    state: IgniteHookState = { done: false, hooks: [] }
+class Runner<S> implements ApplicationActionIgniteRunner<S> {
+    state: IgniteHookState<S>
 
-    register(hook: ActionIgniteHook): void {
-        if (this.state.done) {
-            console.warn("igniteHook IGNORED: hook added in ignite hook")
-            return
-        }
-        this.state = { done: false, hooks: [...this.state.hooks, hook] }
+    constructor(hook: ApplicationActionIgniteHook<S>) {
+        this.state = { done: false, hook }
     }
-    ignite(): void {
+
+    ignite(): Promise<S> {
         // 一回 ignite したら ignite 済みとしてマーク
         // 複数の箇所から複数回コールされても hook の実行は一回だけ
-        if (!this.state.done) {
-            const hooks = this.state.hooks
-            this.state = { done: true }
-            hooks.forEach((hook) => hook())
+        if (this.state.done) {
+            return this.state.promise
         }
-    }
-    terminate(): void {
-        this.state = { done: true }
+        this.state = { done: true, promise: this.state.hook() }
+        return this.state.promise
     }
 }
 
-type IgniteHookState =
-    | Readonly<{ done: false; hooks: ActionIgniteHook[] }>
-    | Readonly<{ done: true }>
+type IgniteHookState<S> =
+    | Readonly<{ done: false; hook: ApplicationActionIgniteHook<S> }>
+    | Readonly<{ done: true; promise: Promise<S> }>

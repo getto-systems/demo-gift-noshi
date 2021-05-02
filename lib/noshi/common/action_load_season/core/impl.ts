@@ -23,11 +23,7 @@ class Action extends ApplicationAbstractStateAction<LoadSeasonCoreState> {
     material: LoadSeasonCoreMaterial
 
     constructor(material: LoadSeasonCoreMaterial) {
-        super()
+        super(() => this.material.loadSeason(this.post))
         this.material = material
-
-        this.igniteHook(() => {
-            this.material.loadSeason(this.post)
-        })
     }
 }

@@ -9,7 +9,7 @@ export interface ApplicationAction {
 export interface ApplicationStateAction<S> extends ApplicationAction {
     readonly initialState: S
     readonly subscriber: ApplicationActionStateSubscriber<S>
-    ignite(): void
+    ignite(): Promise<S>
 }
 
 export interface ApplicationActionStateSubscriber<S> {

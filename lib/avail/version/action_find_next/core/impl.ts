@@ -36,11 +36,7 @@ class Action
     material: FindNextVersionMaterial
 
     constructor(material: FindNextVersionMaterial) {
-        super()
+        super(() => this.material.find(this.post))
         this.material = material
-
-        this.igniteHook(() => {
-            this.material.find(this.post)
-        })
     }
 }

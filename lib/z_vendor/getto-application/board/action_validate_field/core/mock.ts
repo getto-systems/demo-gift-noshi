@@ -28,7 +28,7 @@ class Mock<T, E>
     get(): ConvertBoardFieldResult<T, E> {
         return this.value
     }
-    check(): void {
-        // mock では特に何もしない
+    async check(): Promise<ValidateBoardFieldState<E>> {
+        return this.initialState
     }
 }

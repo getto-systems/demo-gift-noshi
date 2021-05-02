@@ -33,13 +33,12 @@ export const findNextVersion: Find = (infra) => (detecter) => async (post) => {
     const currentVersion = versionConfigConverter(version)
 
     if (!currentVersion.valid) {
-        post({
+        return post({
             type: "succeed-to-find",
             upToDate: true,
             version: versionStringConfigConverter(version),
             target,
         })
-        return
     }
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
@@ -49,19 +48,18 @@ export const findNextVersion: Find = (infra) => (detecter) => async (post) => {
         () => post({ type: "take-longtime-to-find" }),
     )
     if (!next.success) {
-        post({ type: "failed-to-find", err: next.err })
-        return
+        return post({ type: "failed-to-find", err: next.err })
     }
 
     if (!next.found) {
-        post({
+        return post({
             type: "succeed-to-find",
             upToDate: true,
             version: versionStringConfigConverter(version),
             target,
         })
     } else {
-        post({
+        return post({
             type: "succeed-to-find",
             upToDate: false,
             version: versionToString(next.version),

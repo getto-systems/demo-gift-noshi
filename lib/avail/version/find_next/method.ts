@@ -7,7 +7,7 @@ export interface FindNextVersionPod {
     (detecter: FindNextVersionLocationDetecter): FindNextVersionMethod
 }
 export interface FindNextVersionMethod {
-    (post: Post<FindNextVersionEvent>): void
+    <S>(post: Post<FindNextVersionEvent, S>): Promise<S>
 }
 
 type FindNextVersionLocationTypes = LocationTypes<ApplicationTargetPath>
@@ -16,6 +16,6 @@ export type FindNextVersionLocationDetectMethod = FindNextVersionLocationTypes["
 export type FindNextVersionLocationInfo = FindNextVersionLocationTypes["info"]
 export type FindNextVersionLocationKeys = Readonly<{ version: string }>
 
-interface Post<T> {
-    (event: T): void
+interface Post<E, S> {
+    (event: E): S
 }
