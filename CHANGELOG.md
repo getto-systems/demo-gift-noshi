@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.12.0
+
+- add: mock noshi : See merge request getto-systems-base/projects/demo/gift-noshi!49
+
+
 ## Version : 0.11.0
 
 - fix: sheet : See merge request getto-systems-base/projects/demo/gift-noshi!47
