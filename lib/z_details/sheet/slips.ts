@@ -1,3 +1,4 @@
+import { env } from "../../y_environment/env"
 import { PaperSize, Workbook } from "exceljs"
 
 type Slip = Readonly<{ size: SlipSize }> & SlipData
@@ -25,6 +26,10 @@ interface PrintSlips {
 }
 export function newSheet_deliverySlips(): PrintSlips {
     return async (slips) => {
+        const mock = true
+        if (mock) {
+            return `/${env.version}/noshi.xlsx`
+        }
         const workbook = new Workbook()
 
         Array.from(
@@ -65,6 +70,8 @@ export function newSheet_deliverySlips(): PrintSlips {
     function sheet_A4(workbook: Workbook): AddSlip {
         const sheet = workbook.addWorksheet("A4")
 
+        sheet.properties.defaultRowHeight = BASE_HEIGHT
+
         sheet.pageSetup.orientation = "landscape"
         sheet.pageSetup.paperSize = PaperSize.A4
         sheet.pageSetup.horizontalDpi = 1200
@@ -99,9 +106,9 @@ export function newSheet_deliverySlips(): PrintSlips {
         }
 
         const height: HeightMap = {
-            type: 18,
-            padding: 8,
-            name: 19,
+            type: 15,
+            padding: 6,
+            name: 22,
         }
 
         return (data: SlipData): void => {
@@ -113,10 +120,14 @@ export function newSheet_deliverySlips(): PrintSlips {
 
             const name = sheet.addRow([data.name])
             name.height = rowHeight(height.name)
+
+            name.addPageBreak()
         }
     }
     function sheet_A3(workbook: Workbook): AddSlip {
         const sheet = workbook.addWorksheet("A3")
+
+        sheet.properties.defaultRowHeight = BASE_HEIGHT
 
         sheet.pageSetup.orientation = "landscape"
         sheet.pageSetup.paperSize = 8 // A3
@@ -124,8 +135,8 @@ export function newSheet_deliverySlips(): PrintSlips {
         sheet.pageSetup.verticalDpi = 1200
         sheet.pageSetup.horizontalCentered = true
         sheet.pageSetup.margins = {
-            top: 0.5,
-            bottom: 0.5,
+            top: 0.75,
+            bottom: 0.75,
             left: 0,
             right: 0,
             header: 0,
@@ -150,9 +161,9 @@ export function newSheet_deliverySlips(): PrintSlips {
         }
 
         const height: HeightMap = {
-            type: 25,
-            padding: 14,
-            name: 23,
+            type: 22,
+            padding: 8,
+            name: 26,
         }
 
         return (data: SlipData): void => {
@@ -164,6 +175,8 @@ export function newSheet_deliverySlips(): PrintSlips {
 
             const name = sheet.addRow([data.name])
             name.height = rowHeight(height.name)
+
+            name.addPageBreak()
         }
     }
 }
